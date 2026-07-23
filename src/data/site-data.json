@@ -1,0 +1,30 @@
+{
+  "siteMetadata": {
+    "title": "Browser Supply — No back-and-forth with AI. Pick, edit, publish.",
+    "description": "Premium Framer & Webflow templates built for modern startups and creators.",
+    "url": "https://browser.supply",
+    "ogImage": "/images/og-image.png",
+    "creator": "Browser Supply Team",
+    "rating": "4.92/5",
+    "reviewCount": "180+ reviews"
+  },
+  "theme": {
+    "colors": {
+      "bgPrimary": "#050507",
+      "bgSecondary": "#0d0e12",
+      "bgCard": "#12141c",
+      "bgGlass": "rgba(13, 14, 18, 0.75)",
+      "borderDefault": "rgba(255, 255, 255, 0.08)",
+      "borderActive": "rgba(255, 255, 255, 0.18)",
+      "accentPurple": "#8b5cf6",
+      "accentBlue": "#3b82f6",
+      "accentCyan": "#06b6d4",
+      "textPrimary": "#ffffff",
+      "textSecondary": "#94a3b8",
+      "textMuted": "#64748b"
+    },
+    "fonts": {
+      "sans": "Inter, sans-serif"
+    }
+  }
+}

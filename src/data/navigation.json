@@ -1,0 +1,22 @@
+{
+  "logo": {
+    "text": "Browser Supply",
+    "badge": "Templates",
+    "href": "/"
+  },
+  "navLinks": [
+    { "label": "Templates", "href": "#templates" },
+    { "label": "Live examples", "href": "#examples" },
+    { "label": "Support", "href": "#support" },
+    { "label": "Blog", "href": "#blog" }
+  ],
+  "socialLinks": [
+    { "platform": "twitter", "url": "https://x.com", "label": "Follow on X" },
+    { "platform": "youtube", "url": "https://youtube.com", "label": "Subscribe on YouTube" }
+  ],
+  "cta": {
+    "text": "Get Bundle",
+    "href": "#pricing",
+    "badge": "$399"
+  }
+}

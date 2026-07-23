@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "name": "Sarah Jenkins",
+    "handle": "@sarah_j",
+    "role": "Founder at Launchpad",
+    "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop",
+    "comment": "Browser Supply templates saved us 3 weeks of design back-and-forth. Shipped in 2 days!",
+    "stars": 5
+  },
+  {
+    "id": "2",
+    "name": "Marcus Vance",
+    "handle": "@marcus_v",
+    "role": "Design Lead at Craft",
+    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&auto=format&fit=crop",
+    "comment": "The cleanest Framer code structure I've ever seen. Extremely easy to customize.",
+    "stars": 5
+  },
+  {
+    "id": "3",
+    "name": "Elena Rostova",
+    "handle": "@elena_design",
+    "role": "Indie Hacker",
+    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200&auto=format&fit=crop",
+    "comment": "Converted 3x better than our custom landing page. Worth every single cent.",
+    "stars": 5
+  },
+  {
+    "id": "4",
+    "name": "David Kim",
+    "handle": "@davidkim_ai",
+    "role": "CTO at Nexus AI",
+    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop",
+    "comment": "No AI tool can match the human craft in these components. Absolute perfection.",
+    "stars": 5
+  },
+  {
+    "id": "5",
+    "name": "Jessica Taylor",
+    "handle": "@jtaylor_creative",
+    "role": "Marketing Director",
+    "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop",
+    "comment": "Bought the bundle and launched 4 client sites in a single month!",
+    "stars": 5
+  },
+  {
+    "id": "6",
+    "name": "Liam O'Connor",
+    "handle": "@liam_oc",
+    "role": "Product Manager",
+    "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop",
+    "comment": "The micro-animations and typography scales are world-class.",
+    "stars": 5
+  }
+]

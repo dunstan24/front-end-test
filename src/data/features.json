@@ -1,0 +1,41 @@
+{
+  "header": {
+    "badge": "Why Browser Supply",
+    "title": "Why choose a template over custom dev?",
+    "subtitle": "Save hundreds of hours in design and development while delivering a 99th-percentile website experience."
+  },
+  "items": [
+    {
+      "id": "responsive",
+      "icon": "Smartphone",
+      "title": "100% Fluid Responsive",
+      "description": "Pixel-perfect across mobile, tablet, and ultra-wide displays. Pre-configured break points tested on dozens of real devices.",
+      "tag": "Mobile-First Design",
+      "image": "https://images.unsplash.com/photo-1526498460520-4c246339dccb?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "video-tutorials",
+      "icon": "Video",
+      "title": "Video Tutorials Included",
+      "description": "Every template comes with comprehensive 4K video walkthroughs showing you how to customize colors, fonts, and launch.",
+      "tag": "Guided Setup",
+      "image": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "seo",
+      "icon": "Search",
+      "title": "Built-in SEO & OpenGraph",
+      "description": "Pre-optimized meta tags, title hierarchies, schema markup, and social share previews ready out of the box.",
+      "tag": "Google Ranked",
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop"
+    },
+    {
+      "id": "cms",
+      "icon": "Database",
+      "title": "Integrated CMS Systems",
+      "description": "Manage blog posts, team members, portfolio items, and testimonials effortlessly with Framer & Webflow native CMS.",
+      "tag": "Dynamic Content",
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop"
+    }
+  ]
+}

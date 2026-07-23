@@ -1,0 +1,50 @@
+{
+  "header": {
+    "badge": "Curated Collection",
+    "title": "Templates built for high conversion.",
+    "subtitle": "Designed by senior designers, engineered in Framer & Webflow with smooth animations, dark modes, and full responsiveness.",
+    "viewAllText": "View all 14+ templates",
+    "viewAllHref": "#pricing"
+  },
+  "featured": [
+    {
+      "id": "aura-saas",
+      "name": "Aura — SaaS & AI Platform",
+      "category": "SaaS / AI Tech",
+      "price": "$129",
+      "originalPrice": "$179",
+      "badge": "Best Seller",
+      "badgeColor": "purple",
+      "description": "Clean, ultra-modern landing page template designed specifically for AI startups and modern B2B SaaS platforms.",
+      "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
+      "previewUrl": "https://aura.framer.website",
+      "features": ["12 Pages Included", "Framer Native", "3D Interactive Assets", "Light & Dark Mode"]
+    },
+    {
+      "id": "vortex-agency",
+      "name": "Vortex — Creative Agency",
+      "category": "Agency / Studio",
+      "price": "$129",
+      "originalPrice": "$169",
+      "badge": "New Release",
+      "badgeColor": "cyan",
+      "description": "Bold, typography-driven Framer template for creative studios, design agencies, and senior freelancers.",
+      "image": "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=1000&auto=format&fit=crop",
+      "previewUrl": "https://vortex.framer.website",
+      "features": ["Dynamic CMS Portfolio", "Custom Cursor", "Smooth Scroll Reveal", "Case Study Layouts"]
+    },
+    {
+      "id": "pulse-portfolio",
+      "name": "Pulse — Creator Portfolio",
+      "category": "Personal / Portfolio",
+      "price": "$99",
+      "originalPrice": "$149",
+      "badge": "Popular",
+      "badgeColor": "indigo",
+      "description": "Minimalist portfolio template for digital creators, engineers, and product designers looking to showcase work.",
+      "image": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1000&auto=format&fit=crop",
+      "previewUrl": "https://pulse.framer.website",
+      "features": ["Work Showcase", "Blog CMS Integration", "Fast Load Times", "Responsive Grid"]
+    }
+  ]
+}

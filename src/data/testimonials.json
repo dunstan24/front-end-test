@@ -1,0 +1,75 @@
+{
+  "header": {
+    "badge": "Community Praise",
+    "title": "Trusted by top founders & design leads.",
+    "subtitle": "Over 500+ companies have launched their landing pages using our Framer and Webflow templates."
+  },
+  "grid": [
+    {
+      "id": "t1",
+      "name": "Alex Rivers",
+      "role": "Co-founder & CEO",
+      "company": "Kinetix AI",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop",
+      "quote": "We replaced our $15k agency design proposal with the Aura template. Shipped in 48 hours and closed our Seed round 2 weeks later. Unbelievable ROI.",
+      "templateUsed": "Aura SaaS",
+      "rating": 5,
+      "verified": true
+    },
+    {
+      "id": "t2",
+      "name": "Maya Lin",
+      "role": "Head of Design",
+      "company": "Horizon Studio",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop",
+      "quote": "As a designer, I'm usually picky about template code. Browser Supply is hands down the cleanest Framer setup I've worked with. The typography scale is elite.",
+      "templateUsed": "Vortex Agency",
+      "rating": 5,
+      "verified": true
+    },
+    {
+      "id": "t3",
+      "name": "Daniel Sterling",
+      "role": "Growth Marketer",
+      "company": "FlowState",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop",
+      "quote": "Our conversion rate jumped from 2.1% to 4.8% after switching to Browser Supply. The built-in responsive breakpoints and fast load speed made all the difference.",
+      "templateUsed": "Pulse Portfolio",
+      "rating": 5,
+      "verified": true
+    },
+    {
+      "id": "t4",
+      "name": "Sophia Chen",
+      "role": "Founder",
+      "company": "Luminary Studio",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300&auto=format&fit=crop",
+      "quote": "The video tutorials included with the template answered every single question I had. Customizing global color variables took literally 10 minutes.",
+      "templateUsed": "Aura SaaS",
+      "rating": 5,
+      "verified": true
+    },
+    {
+      "id": "t5",
+      "name": "Carlos Gomez",
+      "role": "Indie Maker",
+      "company": "ShipFast Studio",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop",
+      "quote": "Buying the Bundle was the best investment I made this year. I've launched 3 different micro-SaaS landing pages using components from the bundle.",
+      "templateUsed": "All-Access Bundle",
+      "rating": 5,
+      "verified": true
+    },
+    {
+      "id": "t6",
+      "name": "Hannah Wright",
+      "role": "Creative Director",
+      "company": "Prism Digital",
+      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=300&auto=format&fit=crop",
+      "quote": "The micro-interactions and hover animations feel completely custom. Clients constantly ask who built our site. Thank you Browser Supply!",
+      "templateUsed": "Vortex Agency",
+      "rating": 5,
+      "verified": true
+    }
+  ]
+}

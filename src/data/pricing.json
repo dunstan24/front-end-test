@@ -1,0 +1,66 @@
+{
+  "header": {
+    "badge": "Transparent Pricing",
+    "title": "Pay once, own it forever.",
+    "subtitle": "No recurring monthly fees. Lifetime license, free updates, and commercial usage rights included."
+  },
+  "tiers": [
+    {
+      "id": "single",
+      "name": "Single Template",
+      "price": "$129",
+      "billing": "One-time payment",
+      "badge": null,
+      "highlight": false,
+      "description": "Perfect for founders launching a single startup or landing page.",
+      "ctaText": "Get single template",
+      "ctaHref": "#templates",
+      "features": [
+        "1 Framer or Webflow template",
+        "Single commercial project license",
+        "Figma design source file included",
+        "Step-by-step video setup guide",
+        "Lifetime free template updates",
+        "Standard email support (24h)"
+      ]
+    },
+    {
+      "id": "bundle",
+      "name": "All-Access Bundle",
+      "price": "$399",
+      "billing": "One-time payment",
+      "badge": "MOST POPULAR — SAVE 70%",
+      "highlight": true,
+      "description": "Complete suite for agencies, indie hackers, and serial founders.",
+      "ctaText": "Get All-Access Bundle",
+      "ctaHref": "#checkout-bundle",
+      "features": [
+        "Access to ALL 14+ current templates",
+        "Unlimited commercial project licenses",
+        "ALL future template releases included",
+        "Figma + Framer source files for all",
+        "Priority Discord & email support",
+        "1-on-1 launch review call with team"
+      ]
+    },
+    {
+      "id": "custom",
+      "name": "Custom Project",
+      "price": "$2,495",
+      "billing": "Starting price per project",
+      "badge": "Bespoke Design",
+      "highlight": false,
+      "description": "Have our core design team build your custom site in Framer or Webflow.",
+      "ctaText": "Book a discovery call",
+      "ctaHref": "#contact",
+      "features": [
+        "Custom design built from scratch",
+        "2-week rapid delivery guarantee",
+        "3D animation & custom interactive code",
+        "Full CMS architecture & SEO setup",
+        "Dedicated private Slack channel",
+        "30 days post-launch support"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "badge": "Template Matcher",
+  "title": "Not sure which template is right for you?",
+  "subtitle": "Answer 3 quick questions about your project, timeline, and industry to get an instant recommendation.",
+  "ctaPrimary": "Take the 30-second quiz",
+  "ctaSecondary": "Talk to design team",
+  "quizQuestions": [
+    {
+      "id": 1,
+      "question": "What is the primary goal of your website?",
+      "options": ["Launch B2B SaaS", "Showcase Design Agency", "Personal Portfolio", "E-commerce Store"]
+    },
+    {
+      "id": 2,
+      "question": "Which platform do you prefer?",
+      "options": ["Framer Native", "Webflow CMS", "Next.js / Code", "Not Sure Yet"]
+    }
+  ],
+  "backgroundThumbnails": [
+    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=400&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop"
+  ]
+}
