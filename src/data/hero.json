@@ -1,28 +1,42 @@
 {
-  "rating": {
-    "score": "4.92/5",
-    "reviews": "180+ reviews",
-    "starCount": 5
+  "topBadge": {
+    "icon": "Zap",
+    "text": "FRAMER TEMPLATES"
   },
   "headline": {
-    "primary": "No back-and-forth with AI.",
-    "highlight": "Pick, edit, publish."
+    "line1": "No back-and-forth with",
+    "line2": "AI. Pick, edit, publish."
   },
-  "description": "Premium Framer & Webflow templates built for modern startups and creators. Launch high-converting, pixel-perfect websites in minutes without waiting weeks for design or code iterations.",
+  "rating": {
+    "score": "4.92/5",
+    "text": "RATED 4.92/5",
+    "avatars": [
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=100&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop"
+    ]
+  },
   "ctas": {
     "primary": {
-      "text": "Browse templates",
+      "text": "Pick your template",
       "href": "#templates"
     },
     "secondary": {
-      "text": "Get the Bundle",
-      "badge": "$399",
-      "href": "#pricing"
+      "text": "Or get matched with the perfect one",
+      "href": "#quiz-modal"
     }
   },
-  "showcase": {
-    "title": "Browser Supply Template Studio",
-    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600&auto=format&fit=crop",
-    "tags": ["Framer Native", "100% Customizable", "SEO Optimized", "Responsive"]
+  "quizModal": {
+    "badge": "60-SECOND QUIZ",
+    "headline": "Get 30% off the perfect template for your business",
+    "description": "Answer 3 quick questions about your industry, stack, and goals to unlock an instant 30% discount and personalized template match.",
+    "ctaText": "Take the quiz",
+    "ctaHref": "#quiz",
+    "collageImages": [
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop"
+    ]
   }
 }

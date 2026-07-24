@@ -1,8 +1,8 @@
 {
-  "badge": "Template Matcher",
-  "title": "Not sure which template is right for you?",
-  "subtitle": "Answer 3 quick questions about your project, timeline, and industry to get an instant recommendation.",
-  "ctaPrimary": "Take the 30-second quiz",
+  "badge": "TEMPLATE QUIZ",
+  "title": "Not sure which template is for you?",
+  "subtitle": "Take our 60-second quiz to get personalized recommendations for your business.",
+  "ctaPrimary": "Take the 60s quiz →",
   "ctaSecondary": "Talk to design team",
   "quizQuestions": [
     {

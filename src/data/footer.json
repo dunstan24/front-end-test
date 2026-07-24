@@ -1,42 +1,25 @@
 {
   "brand": {
-    "name": "Browser Supply",
-    "tagline": "High-converting Framer & Webflow templates built for modern startups and digital creators."
+    "name": "Browser.supply",
+    "tagline": "High-converting Framer & Webflow templates built for modern startups."
   },
   "columns": [
     {
-      "title": "Templates",
+      "title": "Products",
       "links": [
-        { "label": "Aura — SaaS & AI", "href": "#templates" },
-        { "label": "Vortex — Studio Agency", "href": "#templates" },
-        { "label": "Pulse — Portfolio", "href": "#templates" },
-        { "label": "All-Access Bundle", "href": "#pricing" }
+        { "label": "Templates", "href": "#templates" },
+        { "label": "Bundle", "href": "#pricing" },
+        { "label": "Custom Project", "href": "#pricing" }
       ]
     },
     {
       "title": "Resources",
       "links": [
-        { "label": "Live Examples", "href": "#examples" },
-        { "label": "Video Tutorials", "href": "#how-it-works" },
-        { "label": "Support Center", "href": "#support" },
-        { "label": "Blog & Guides", "href": "#blog" }
-      ]
-    },
-    {
-      "title": "Company",
-      "links": [
-        { "label": "About Creator", "href": "#about-creator" },
-        { "label": "Affiliate Program", "href": "#affiliates" },
-        { "label": "Privacy Policy", "href": "#privacy" },
-        { "label": "Terms of Service", "href": "#terms" }
+        { "label": "Examples", "href": "#examples" },
+        { "label": "Support", "href": "#support" },
+        { "label": "Blog", "href": "#blog" }
       ]
     }
   ],
-  "socials": [
-    { "platform": "Twitter", "url": "https://x.com" },
-    { "platform": "YouTube", "url": "https://youtube.com" },
-    { "platform": "GitHub", "url": "https://github.com" }
-  ],
-  "copyright": "© 2026 Browser Supply. All rights reserved.",
-  "credit": "Cloned for MindiMedia Front End Test."
+  "copyright": "© 2026 Browser Supply. All rights reserved."
 }

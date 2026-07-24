@@ -1,75 +1,82 @@
 {
   "header": {
-    "badge": "Community Praise",
-    "title": "Trusted by top founders & design leads.",
-    "subtitle": "Over 500+ companies have launched their landing pages using our Framer and Webflow templates."
+    "badge": "HAS ANYONE ELSE TRIED IT?",
+    "title": "Trusted by 2k+ customers\naround the globe.",
+    "btnRight": "See real customer websites →"
   },
   "grid": [
     {
       "id": "t1",
-      "name": "Alex Rivers",
-      "role": "Co-founder & CEO",
-      "company": "Kinetix AI",
-      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop",
-      "quote": "We replaced our $15k agency design proposal with the Aura template. Shipped in 48 hours and closed our Seed round 2 weeks later. Unbelievable ROI.",
-      "templateUsed": "Aura SaaS",
-      "rating": 5,
-      "verified": true
+      "name": "Nic",
+      "quote": "This Framer template is excellent at elevating your online presence!",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
     },
     {
       "id": "t2",
-      "name": "Maya Lin",
-      "role": "Head of Design",
-      "company": "Horizon Studio",
-      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop",
-      "quote": "As a designer, I'm usually picky about template code. Browser Supply is hands down the cleanest Framer setup I've worked with. The typography scale is elite.",
-      "templateUsed": "Vortex Agency",
-      "rating": 5,
-      "verified": true
+      "name": "Renan",
+      "quote": "Very nice. Intuitive, easy going, good to navigate. Just Awesome!",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
     },
     {
       "id": "t3",
-      "name": "Daniel Sterling",
-      "role": "Growth Marketer",
-      "company": "FlowState",
-      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop",
-      "quote": "Our conversion rate jumped from 2.1% to 4.8% after switching to Browser Supply. The built-in responsive breakpoints and fast load speed made all the difference.",
-      "templateUsed": "Pulse Portfolio",
-      "rating": 5,
-      "verified": true
+      "name": "Emon",
+      "quote": "The best part of the template is it's aesthetically pleasing and business focused.",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
     },
     {
       "id": "t4",
-      "name": "Sophia Chen",
-      "role": "Founder",
-      "company": "Luminary Studio",
-      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=300&auto=format&fit=crop",
-      "quote": "The video tutorials included with the template answered every single question I had. Customizing global color variables took literally 10 minutes.",
-      "templateUsed": "Aura SaaS",
-      "rating": 5,
-      "verified": true
+      "name": "Widya",
+      "quote": "Beautiful design and is easy to set up! The tutorial helped me a lot.",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
     },
     {
       "id": "t5",
-      "name": "Carlos Gomez",
-      "role": "Indie Maker",
-      "company": "ShipFast Studio",
-      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop",
-      "quote": "Buying the Bundle was the best investment I made this year. I've launched 3 different micro-SaaS landing pages using components from the bundle.",
-      "templateUsed": "All-Access Bundle",
-      "rating": 5,
-      "verified": true
+      "name": "Dávid",
+      "quote": "Super easy to use and customise and also beautifully designed.",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
     },
     {
       "id": "t6",
-      "name": "Hannah Wright",
-      "role": "Creative Director",
-      "company": "Prism Digital",
-      "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=300&auto=format&fit=crop",
-      "quote": "The micro-interactions and hover animations feel completely custom. Clients constantly ask who built our site. Thank you Browser Supply!",
-      "templateUsed": "Vortex Agency",
-      "rating": 5,
-      "verified": true
+      "name": "Mark",
+      "quote": "The design is clean, easy to custmize, professional, and versatile.",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
+    },
+    {
+      "id": "t7",
+      "name": "Samar",
+      "quote": "The templates is so well designed and has a unique look to them.",
+      "avatar": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
+    },
+    {
+      "id": "t8",
+      "name": "Aba",
+      "quote": "The template is excellent! It is super easy to use and very beautiful.",
+      "avatar": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
+    },
+    {
+      "id": "t9",
+      "name": "Nonso",
+      "quote": "One of the best templates I've used. Very professional and easy to modify.",
+      "avatar": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=100&auto=format&fit=crop",
+      "rating": 5
     }
-  ]
+  ],
+  "spotlight": {
+    "title": "Matt launched his new site in less than 1 hour.",
+    "paragraph1": "From burning out on 12-hour gym shifts to running his own online coaching business, on his own terms.",
+    "paragraph2": "Matt had tried the agency route before. Thousands of dollars later, he had a terrible site and zero control over it.",
+    "paragraph3": "I showed him the right template. We sat in a café, he made the edits himself, and launched in 1 hour.",
+    "highlightQuote": "No design skills. No coding. Barely any laptop experience. Didn't need any.",
+    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop",
+    "btnPrimary": "View template Matt used",
+    "btnSecondary": "View other customers' sites"
+  }
 }

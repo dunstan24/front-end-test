@@ -1,22 +1,14 @@
 {
-  "badge": "Case Study",
-  "title": "How Kinetix AI launched in 48 hours & raised $1.2M Seed.",
-  "subtitle": "Kinetix AI replaced a complex 6-week agency redesign with the Aura SaaS template. They launched in 2 days and tripled landing page signups.",
+  "badge": "CASE STUDY",
+  "client": "Kinetix AI",
+  "headline": "From zero to $1.2M seed round with a browser.supply template.",
+  "quote": "We launched in 48 hours using the Aura SaaS template. The quality of the design alone helped us close our first enterprise deal.",
+  "author": "Alex Chen",
+  "authorRole": "CEO & Co-founder, Kinetix AI",
   "metrics": [
     { "value": "400%", "label": "Traffic Growth" },
-    { "value": "48 Hours", "label": "Time to Launch" },
-    { "value": "3.8x", "label": "Conversion Lift" }
+    { "value": "48h", "label": "Launch Time" },
+    { "value": "$1.2M", "label": "Seed Raised" }
   ],
-  "customer": {
-    "name": "Alex Rivers",
-    "role": "Co-founder & CEO, Kinetix AI",
-    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop",
-    "quote": "Browser Supply gave us a site that looked like we hired a $20k Y-Combinator design studio. Investors complimented our website during pitches."
-  },
-  "templateUsed": {
-    "name": "Aura — SaaS & AI Landing",
-    "price": "$129",
-    "url": "#templates"
-  },
-  "previewImage": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop"
+  "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop"
 }

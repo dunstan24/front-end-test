@@ -1,33 +1,33 @@
 {
   "header": {
-    "badge": "Simple Process",
-    "title": "How does it work?",
-    "subtitle": "Launching a high-converting website shouldn't take months. Three simple steps and you're live."
+    "badge": "HOW IT WORKS",
+    "title": "Go live within hours, not months, weeks or even days.",
+    "subtitle": ""
   },
   "steps": [
     {
       "step": "01",
       "title": "Pick a template",
-      "subtitle": "Choose the perfect foundation",
-      "description": "Select from our library of conversion-tested Framer and Webflow templates. Filter by industry, style, or features.",
+      "subtitle": "Choose from our library of conversion-tested templates.",
+      "description": "Select from our library of conversion-tested Framer and Webflow templates built for high performance.",
       "image": "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?q=80&w=1000&auto=format&fit=crop",
-      "features": ["14+ Custom Templates", "Instant Access", "Framer Remix Links"]
+      "features": ["14+ Templates", "Instant Access", "Framer Remix"]
     },
     {
       "step": "02",
       "title": "Make it yours",
-      "subtitle": "No complex code needed",
-      "description": "Swap text content, replace images, adjust global color tokens, and connect your own CMS data with Framer's visual canvas.",
+      "subtitle": "Customise text, colors, and images effortlessly.",
+      "description": "Swap text content, replace images, adjust global color tokens, and customize CMS collections.",
       "image": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000&auto=format&fit=crop",
-      "features": ["Drag & Drop Interface", "Global Design Tokens", "CMS Blog & Portfolio"]
+      "features": ["No Code Needed", "Global Variables", "CMS Integration"]
     },
     {
       "step": "03",
-      "title": "Go live instantly",
-      "subtitle": "Publish with 1-click",
-      "description": "Connect your custom domain name, hit publish, and launch your site on Vercel or Framer's ultra-fast global CDN.",
+      "title": "Go live",
+      "subtitle": "Publish to custom domain with 1 click.",
+      "description": "Connect your custom domain name, hit publish, and launch your site globally.",
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop",
-      "features": ["Custom Domain Integration", "Free SSL Certificate", "Global Edge CDN"]
+      "features": ["1-Click Publish", "Custom Domain", "Free SSL"]
     }
   ]
 }

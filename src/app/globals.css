@@ -2,76 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @layer base {
   :root {
-    --background: #050507;
-    --foreground: #f8fafc;
-    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --background: #000000;
+    --foreground: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
     color: var(--foreground);
     background-color: var(--background);
-    font-family: var(--font-sans);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 @layer utilities {
-  .bg-grid-pattern {
-    background-size: 40px 40px;
-    background-image: 
-      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+    display: flex;
+    gap: 16px;
   }
 
-  .bg-radial-gradient {
-    background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15) 0%, rgba(5, 5, 7, 0) 70%);
+  .animate-marquee:hover {
+    animation-play-state: paused;
   }
 
-  .glass-card {
-    background: rgba(15, 16, 21, 0.7);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+  .animate-marquee-vertical-up {
+    animation: marqueeVerticalUp 35s linear infinite;
   }
 
-  .glass-nav {
-    background: rgba(5, 5, 7, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  .animate-marquee-vertical-down {
+    animation: marqueeVerticalDown 40s linear infinite;
   }
 
-  .text-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-gradient-purple {
-    background: linear-gradient(135deg, #ffffff 30%, #c084fc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  .animate-slide-up {
+    animation: slideUpFade 0.4s ease-out forwards;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-::-webkit-scrollbar-track {
-  background: #050507;
+@keyframes marqueeVerticalUp {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
 }
 
-::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 4px;
+@keyframes marqueeVerticalDown {
+  0%   { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #3f3f46;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #555; }

@@ -1,17 +1,24 @@
 {
-  "badge": "About the Creator",
-  "name": "Alex & the Browser Supply Studio",
-  "role": "Lead Product Designers & Framer Experts",
-  "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop",
-  "bio": "We've spent the last 8 years crafting premium digital experiences for Silicon Valley startups and global creators. We built Browser Supply to give founders agency-grade Framer templates without the $20,000 price tag.",
-  "stats": [
-    { "value": "8+", "label": "Years Design Experience" },
-    { "value": "140+", "label": "Custom Sites Shipped" },
-    { "value": "$4.2M+", "label": "Client Revenue Raised" },
-    { "value": "1,200+", "label": "Happy Customers" }
+  "badge": "WHO IS THE DESIGNER?",
+  "title": "Meet the creator\nbehind the sites.",
+  "topBtnText": "Book a coaching call with me →",
+  "founderBadge": "FOUNDER",
+  "name": "Ramish",
+  "role": "Designer & Creator",
+  "aboutTitle": "Hey, I'm Ramish\nDesigner & Creator",
+  "videoUrl": "https://vjs.zencdn.net/v/oceans.mp4",
+  "posterImage": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=800&auto=format&fit=crop",
+  "paragraphs": [
+    "When I started my business, I realized speed was everything. Getting a website live meant getting customers through the door.",
+    "Luckily, I knew how to design and build sites, so what could have taken weeks only took me hours.",
+    "That first week, I had my website live, and sales rolling in.",
+    "Now, I'm sharing my unfair advantage with other creative entrepreneurs so they can do the same.",
+    "Launch faster without the cost or complexity."
   ],
-  "socials": [
-    { "platform": "Twitter / X", "handle": "@browsersupply", "url": "https://x.com" },
-    { "platform": "Framer Partner", "handle": "Official Creator", "url": "https://framer.com" }
+  "stats": [
+    { "value": "6+", "label": "Years building sites" },
+    { "value": "100+", "label": "Websites made" },
+    { "value": "$100k+", "label": "Revenue made in Framer" },
+    { "value": "2,000+", "label": "Templates sold" }
   ]
 }

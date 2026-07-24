@@ -1,7 +1,6 @@
 {
   "logo": {
-    "text": "Browser Supply",
-    "badge": "Templates",
+    "text": "Browser.supply",
     "href": "/"
   },
   "navLinks": [
@@ -11,12 +10,11 @@
     { "label": "Blog", "href": "#blog" }
   ],
   "socialLinks": [
-    { "platform": "twitter", "url": "https://x.com", "label": "Follow on X" },
-    { "platform": "youtube", "url": "https://youtube.com", "label": "Subscribe on YouTube" }
+    { "platform": "twitter", "url": "https://x.com", "label": "X" },
+    { "platform": "youtube", "url": "https://youtube.com", "label": "YouTube" }
   ],
   "cta": {
-    "text": "Get Bundle",
-    "href": "#pricing",
-    "badge": "$399"
+    "text": "Bundle",
+    "href": "#pricing"
   }
 }

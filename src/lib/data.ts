@@ -1,4 +1,6 @@
-import siteData from "@/data/site-data.json";
+// Data layer — single source of truth for both Server Components and API Route Handlers.
+// All JSON data lives in /src/data/*.json and is imported here as typed constants.
+
 import navigationData from "@/data/navigation.json";
 import heroData from "@/data/hero.json";
 import marqueeTestimonialsData from "@/data/marquee-testimonials.json";
@@ -12,11 +14,10 @@ import quizData from "@/data/quiz.json";
 import creatorData from "@/data/creator.json";
 import footerData from "@/data/footer.json";
 
-// Type definitions
-export type SiteData = typeof siteData;
+// TypeScript type exports
 export type NavigationData = typeof navigationData;
 export type HeroData = typeof heroData;
-export type MarqueeTestimonial = (typeof marqueeTestimonialsData)[number];
+export type MarqueeTestimonialsData = typeof marqueeTestimonialsData;
 export type TemplatesData = typeof templatesData;
 export type FeaturesData = typeof featuresData;
 export type HowItWorksData = typeof howItWorksData;
@@ -27,92 +28,38 @@ export type QuizData = typeof quizData;
 export type CreatorData = typeof creatorData;
 export type FooterData = typeof footerData;
 
-/**
- * Data fetching library - Single Source of Truth
- * Functions in this file read raw resource data and provide filtering/querying capabilities.
- * Shared between Next.js Server Components and API Route Handlers.
- */
-
-export async function getSiteData(): Promise<SiteData> {
-  return siteData;
-}
-
-export async function getNavigation(): Promise<NavigationData> {
-  return navigationData;
-}
-
-export async function getHero(): Promise<HeroData> {
-  return heroData;
-}
-
-export async function getMarqueeTestimonials(): Promise<MarqueeTestimonial[]> {
-  return marqueeTestimonialsData;
-}
-
+// Data fetcher functions (async for API route compatibility)
+export async function getNavigation() { return navigationData; }
+export async function getHero() { return heroData; }
+export async function getMarqueeTestimonials() { return marqueeTestimonialsData; }
 export async function getTemplates(params?: { category?: string; query?: string }) {
   let items = templatesData.featured;
-
   if (params?.category) {
     const cat = params.category.toLowerCase();
-    items = items.filter((t) => t.category.toLowerCase().includes(cat));
+    items = items.filter(t => t.category.toLowerCase().includes(cat));
   }
-
   if (params?.query) {
     const q = params.query.toLowerCase();
-    items = items.filter(
-      (t) =>
-        t.name.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q)
+    items = items.filter(t =>
+      t.name.toLowerCase().includes(q) ||
+      t.desc.toLowerCase().includes(q) ||
+      t.category.toLowerCase().includes(q)
     );
   }
-
-  return {
-    header: templatesData.header,
-    featured: items,
-    total: items.length,
-  };
+  return { header: templatesData.header, featured: items, total: items.length };
 }
-
-export async function getFeatures(): Promise<FeaturesData> {
-  return featuresData;
-}
-
-export async function getHowItWorks(): Promise<HowItWorksData> {
-  return howItWorksData;
-}
-
+export async function getFeatures() { return featuresData; }
+export async function getHowItWorks() { return howItWorksData; }
 export async function getTestimonials(params?: { template?: string }) {
   let grid = testimonialsData.grid;
-
   if (params?.template) {
-    const tmpl = params.template.toLowerCase();
-    grid = grid.filter((t) => t.templateUsed.toLowerCase().includes(tmpl));
+    const t = params.template.toLowerCase();
+    grid = grid.filter(item => item.template.toLowerCase().includes(t));
   }
-
-  return {
-    header: testimonialsData.header,
-    grid,
-    total: grid.length,
-  };
+  return { header: testimonialsData.header, grid, total: grid.length };
 }
-
-export async function getCaseStudy(): Promise<CaseStudyData> {
-  return caseStudyData;
-}
-
-export async function getPricing(): Promise<PricingData> {
-  return pricingData;
-}
-
-export async function getQuiz(): Promise<QuizData> {
-  return quizData;
-}
-
-export async function getCreator(): Promise<CreatorData> {
-  return creatorData;
-}
-
-export async function getFooter(): Promise<FooterData> {
-  return footerData;
-}
+export async function getCaseStudy() { return caseStudyData; }
+export async function getPricing() { return pricingData; }
+export async function getQuiz() { return quizData; }
+export async function getCreator() { return creatorData; }
+export async function getFooter() { return footerData; }
