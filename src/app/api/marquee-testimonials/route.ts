@@ -8,7 +8,7 @@ export async function GET() {
       {
         success: true,
         data,
-        meta: { total: data.length, timestamp: new Date().toISOString() },
+        meta: { total: data.items.length, timestamp: new Date().toISOString() },
       },
       { status: 200 }
     );

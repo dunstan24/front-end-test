@@ -14,8 +14,6 @@ import {
   Rocket,
   RotateCcw,
   CheckCircle2,
-  Framer,
-  Layout,
   Check
 } from "lucide-react";
 

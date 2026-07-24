@@ -2,24 +2,24 @@ import { NextResponse } from "next/server";
 import { getTemplates } from "@/lib/data";
 
 /**
- * Endpoint REST API: GET /api/templates
+ * REST API Endpoint: GET /api/templates
  * 
- * Mengembalikan daftar template unggulan dalam format JSON konsisten.
- * Mendukung Query Parameters:
- * - `category`: Menyaring template berdasarkan kategori (misal: ?category=SaaS)
- * - `query`: Mencari template berdasarkan kata kunci nama/deskripsi (misal: ?query=Aura)
+ * Returns featured template data in a structured JSON format.
+ * Supports Query Parameters:
+ * - `category`: Filter templates by category (e.g. ?category=SaaS)
+ * - `query`: Search templates by keyword in name/description (e.g. ?query=Aura)
  */
 export async function GET(request: Request) {
   try {
-    // Ambil parameter URL query dari HTTP Request
+    // Extract query parameters from URL
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category") || undefined;
     const query = searchParams.get("query") || undefined;
 
-    // Panggil fungsi data layer tunggal untuk mendapatkan data yang telah difilter
+    // Fetch filtered data using single-source data fetcher
     const result = await getTemplates({ category, query });
 
-    // Kembalikan response JSON standar dengan HTTP Status 200 OK
+    // Return standard JSON response with HTTP status 200 OK
     return NextResponse.json(
       {
         success: true,
@@ -34,13 +34,13 @@ export async function GET(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    // Tangani error jika terjadi kegagalan pembacaan data (HTTP Status 500)
-    console.error("Error pada GET /api/templates:", error);
+    // Handle error with HTTP 500 status code
+    console.error("Error in GET /api/templates:", error);
     return NextResponse.json(
       { 
         success: false, 
         error: "Internal Server Error", 
-        message: "Gagal mengambil data resource template" 
+        message: "Failed to load template resources" 
       },
       { status: 500 }
     );
