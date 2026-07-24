@@ -14,7 +14,6 @@ import {
   Rocket,
   RotateCcw,
   CheckCircle2,
-  Framer,
   Layout,
   Check
 } from "lucide-react";
@@ -60,7 +59,11 @@ const renderIcon = (key: string) => {
     case "repeat":
       return <RotateCcw className="w-4 h-4 text-zinc-400 shrink-0" />;
     case "framer":
-      return <Framer className="w-4 h-4 text-zinc-400 shrink-0" />;
+      return (
+        <svg className="w-4 h-4 text-zinc-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z" />
+        </svg>
+      );
     case "figma":
       return (
         <svg className="w-4 h-4 text-zinc-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
