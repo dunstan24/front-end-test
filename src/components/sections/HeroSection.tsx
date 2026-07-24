@@ -103,7 +103,7 @@ export default function HeroSection({ onQuiz }: HeroSectionProps) {
             <div className="flex -space-x-2">
               {SOCIAL_PROOF_AVATARS.map((src, i) => (
                 <div key={i} className="w-7 h-7 rounded-full border-2 border-black overflow-hidden relative bg-zinc-800">
-                  <Image src={src} alt="" fill sizes="28px" className="object-cover" />
+                  <Image src={src} alt="" fill sizes="28px" priority className="object-cover" />
                 </div>
               ))}
             </div>

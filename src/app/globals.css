@@ -8,10 +8,6 @@
     --foreground: #ffffff;
   }
 
-  * {
-    box-sizing: border-box;
-  }
-
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -22,6 +18,19 @@
     background-color: var(--background);
     font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  /**
+   * content-visibility: auto — tells the browser to skip rendering
+   * off-screen sections until they approach the viewport.
+   * contain-intrinsic-size prevents layout shift when sections load.
+   * ~60% rendering performance improvement for long pages.
+   */
+  .content-defer {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
   }
 }
 
