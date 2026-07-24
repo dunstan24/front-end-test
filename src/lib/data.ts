@@ -54,7 +54,7 @@ export async function getTestimonials(params?: { template?: string }) {
   let grid = testimonialsData.grid;
   if (params?.template) {
     const t = params.template.toLowerCase();
-    grid = grid.filter(item => item.template.toLowerCase().includes(t));
+    grid = grid.filter(item => item.quote.toLowerCase().includes(t));
   }
   return { header: testimonialsData.header, grid, total: grid.length };
 }
