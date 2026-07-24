@@ -9,6 +9,7 @@ import WhyTemplates from "@/components/sections/WhyTemplates";
 import HowItWorks from "@/components/sections/HowItWorks";
 import TestimonialsGrid from "@/components/sections/TestimonialsGrid";
 import Footer from "@/components/layout/Footer";
+import ScrollReveal from "@/components/ui/ScrollReveal";
 
 /**
  * Dynamic imports for below-fold heavy sections and overlays.
@@ -56,14 +57,37 @@ export default function HomePage() {
       <HeaderNav onQuiz={openQuiz} />
 
       <main>
+        {/* Above the fold: no scroll reveal to avoid LCP delay/layout shift */}
         <HeroSection onQuiz={openQuiz} />
-        <FeaturedGrid />
-        <WhyTemplates />
-        <HowItWorks />
-        <TestimonialsGrid />
-        <PricingSection />
-        <QuizCTA />
-        <AboutCreator />
+        
+        {/* Below the fold: scroll reveal for smooth fade-in slide-up */}
+        <ScrollReveal>
+          <FeaturedGrid />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <WhyTemplates />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <HowItWorks />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <TestimonialsGrid />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <PricingSection />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <QuizCTA />
+        </ScrollReveal>
+
+        <ScrollReveal>
+          <AboutCreator />
+        </ScrollReveal>
       </main>
 
       <Footer />
