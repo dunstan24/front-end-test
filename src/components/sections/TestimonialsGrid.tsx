@@ -85,7 +85,7 @@ export default function TestimonialsGrid({ data }: TestimonialsGridProps) {
               <div className="space-y-4">
                 {/* 5 White Stars */}
                 <div className="flex items-center gap-1 text-white">
-                  {[...Array(item.rating || 5)].map((_, i) => (
+                  {Array.from({ length: item.rating || 5 }).map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-white stroke-none" />
                   ))}
                 </div>

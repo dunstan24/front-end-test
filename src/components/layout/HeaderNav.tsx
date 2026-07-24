@@ -15,7 +15,10 @@ export default function HeaderNav({ onQuiz }: HeaderNavProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);

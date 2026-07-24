@@ -47,3 +47,35 @@ export const SOCIAL_LINKS = {
 
 export const SECTION_CONTAINER = "max-w-[1200px] mx-auto px-5 sm:px-8" as const;
 export const SECTION_PADDING = "py-20" as const;
+
+/* ─── Featured Grid Templates Data ─── */
+
+export const EXACT_FEATURED_TEMPLATES = [
+  {
+    id: "selene",
+    name: "Selene",
+    badge: "NEW",
+    category: "AI SAAS",
+    price: "$129 USD",
+    imgPrimary: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
+    imgSecondary: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "zenna",
+    name: "Zenna",
+    badge: null,
+    category: "YOGA STUDIO",
+    price: "$129 USD",
+    imgPrimary: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop",
+    imgSecondary: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "traction",
+    name: "Traction",
+    badge: null,
+    category: "SMMA",
+    price: "$129 USD",
+    imgPrimary: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+    imgSecondary: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=800&auto=format&fit=crop",
+  },
+] as const;
