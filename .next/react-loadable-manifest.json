@@ -17,6 +17,12 @@
       "static/chunks/_app-pages-browser_src_components_sections_QuizCTA_tsx.js"
     ]
   },
+  "app\\page.tsx -> @/components/ui/HeroQuizModal": {
+    "id": "app\\page.tsx -> @/components/ui/HeroQuizModal",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_ui_HeroQuizModal_tsx.js"
+    ]
+  },
   "app\\page.tsx -> @/components/ui/QuizModal": {
     "id": "app\\page.tsx -> @/components/ui/QuizModal",
     "files": [
