@@ -8,6 +8,10 @@ interface CaseStudyProps {
   data?: CaseStudyData;
 }
 
+/**
+ * CaseStudy Component
+ * Displays a customer spotlight case study with key metrics, founder quote, and video preview.
+ */
 export default function CaseStudy({ data = defaultCaseStudyData }: CaseStudyProps) {
   const caseStudyData = data;
 
@@ -19,18 +23,18 @@ export default function CaseStudy({ data = defaultCaseStudyData }: CaseStudyProp
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
           {/* Left Column: Story & Metrics */}
-          <div className="lg:col-span-7 space-y-8">
+          <div className="lg:col-span-7 space-y-8 text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-accent-purple/10 border border-accent-purple/20 text-xs font-semibold text-accent-purple">
               <TrendingUp className="w-3.5 h-3.5" />
               <span>{caseStudyData.badge}</span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-              {caseStudyData.title}
+              {caseStudyData.headline}
             </h2>
 
             <p className="text-brand-muted text-base sm:text-lg leading-relaxed font-normal">
-              {caseStudyData.subtitle}
+              Case study: <span className="text-white font-medium">{caseStudyData.client}</span>
             </p>
 
             {/* Key Metrics */}
@@ -52,10 +56,10 @@ export default function CaseStudy({ data = defaultCaseStudyData }: CaseStudyProp
               <Quote className="w-8 h-8 text-accent-purple shrink-0 opacity-60" />
               <div className="space-y-2">
                 <p className="text-xs sm:text-sm text-zinc-300 italic">
-                  "{caseStudyData.customer.quote}"
+                  "{caseStudyData.quote}"
                 </p>
                 <div className="text-xs font-semibold text-white">
-                  {caseStudyData.customer.name} — <span className="text-brand-muted font-normal">{caseStudyData.customer.role}</span>
+                  {caseStudyData.author} — <span className="text-brand-muted font-normal">{caseStudyData.authorRole}</span>
                 </div>
               </div>
             </div>
@@ -63,10 +67,10 @@ export default function CaseStudy({ data = defaultCaseStudyData }: CaseStudyProp
             {/* CTA */}
             <div>
               <a
-                href={caseStudyData.templateUsed.url}
+                href="#templates"
                 className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-all shadow-md"
               >
-                <span>View template used ({caseStudyData.templateUsed.name})</span>
+                <span>Explore featured templates</span>
                 <ArrowUpRight className="w-4 h-4" />
               </a>
             </div>
@@ -77,8 +81,8 @@ export default function CaseStudy({ data = defaultCaseStudyData }: CaseStudyProp
             <div className="relative rounded-2xl border border-white/10 bg-zinc-950 overflow-hidden shadow-2xl group">
               <div className="relative aspect-[4/3] w-full">
                 <Image
-                  src={caseStudyData.previewImage}
-                  alt={caseStudyData.title}
+                  src={caseStudyData.image}
+                  alt={caseStudyData.headline}
                   fill
                   className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
                 />
@@ -91,8 +95,8 @@ export default function CaseStudy({ data = defaultCaseStudyData }: CaseStudyProp
                   </div>
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 text-xs font-medium text-white/90 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-                  Watch 2-min case study breakdown
+                <div className="absolute bottom-4 left-4 right-4 text-xs font-medium text-white/90 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 text-left">
+                  Watch case study video breakdown
                 </div>
               </div>
             </div>

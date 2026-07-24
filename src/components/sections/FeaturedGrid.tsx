@@ -96,7 +96,7 @@ export default function FeaturedGrid({ data = defaultTemplatesData }: FeaturedGr
                 </h3>
 
                 <p className="text-xs text-brand-muted leading-relaxed line-clamp-2">
-                  {template.description}
+                  {template.desc}
                 </p>
               </div>
 
