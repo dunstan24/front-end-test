@@ -12,7 +12,7 @@ Proyek ini adalah implementasi clone homepage [browser.supply](https://browser.s
 - **Styling**: Tailwind CSS + Custom CSS Variables (Design Tokens extracted from browser.supply)
 - **Icons**: Lucide React
 - **Data Handling**: Modular Local JSON Data (`/src/data/*.json`)
-- **Animation & Transitions**: CSS GPU Acceleration Keyframes, Hover Micro-interactions, Auto-scrolling Marquee
+- **Animation & Transitions**: CSS GPU Acceleration Keyframes, Hover Micro-interactions, Auto-scrolling Marquee & Video Streams
 - **Deployment**: Vercel Serverless Production Ready
 
 ---
@@ -63,7 +63,7 @@ c:/Users/USER/Desktop/Front end test/
     │   │   ├── quiz/route.ts
     │   │   ├── creator/route.ts
     │   │   └── footer/route.ts
-    │   ├── globals.css        # CSS variables, glassmorphism, grid pattern, reset
+    │   ├── globals.css        # CSS variables, glassmorphic effects, keyframes
     │   ├── layout.tsx         # Root layout + SEO Metadata
     │   └── page.tsx           # Server Component merakit 12 section utama via /lib/data.ts
     ├── components/
@@ -82,7 +82,7 @@ c:/Users/USER/Desktop/Front end test/
 
 1. **Clone repository ini**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/dunstan24/browser-supply-clone.git
    cd "Front end test"
    ```
 
@@ -110,54 +110,82 @@ c:/Users/USER/Desktop/Front end test/
 
 ---
 
-## 📋 Jawaban 7 Pertanyaan Tambahan (MindiMedia Technical Test)
+## 📋 Technical Questions & Answers (Jawaban 7 Pertanyaan Technical Test)
 
-### 1. Kalau pakai data JSON, bagaimana strukturnya supaya scalable & maintainable ke depan?
-**Jawaban**:
-- **Pemisahan Data & Abstraksi Data Layer (`/src/lib/data.ts`)**: Data JSON tidak diimpor langsung oleh komponen UI, melainkan diabstraksikan melalui data layer `/src/lib/data.ts`. Jika di masa mendatang data berpindah ke PostgreSQL atau Headless CMS, komponen frontend maupun API route tidak perlu diubah sama sekali — cukup mengubah fungsi fetcher di `/src/lib/data.ts`.
-- **Pemisahan Modular per Section**: Data dipecah per section (`hero.json`, `templates.json`, `pricing.json`, `testimonials.json`) untuk menghindari monolithic file lock dan memudahkan tim bekerja secara paralel.
-- **Strict TypeScript Interfaces**: Struktur data divalidasi dengan type definition TypeScript (`TemplatesData`, `PricingData`, dll) untuk mencegah kesalahan runtime dan memberikan auto-completion yang akurat.
+### 1. Structure JSON Data for Future Scalability and Maintainability
+*If you use JSON data, how would you structure it to support future scalability and maintainability?*
 
-### 2. Kalau bikin API sendiri, teknologi/framework apa dan kenapa?
-**Jawaban**:
-- **Pilihan Teknologi**: **Next.js 14 Route Handlers (`/src/app/api/.../route.ts`)**.
-- **Alasan Pemilihan**:
-  1. **Zero Configuration & Zero Extra Overhead**: Tidak memerlukan server/framework terpisah (Express/Fastify) sehingga menghindari kerumitan infrastruktur dan dependensi tambahan.
-  2. **Serverless Auto-scaling di Vercel**: API route otomatis dideploy sebagai Vercel Edge/Serverless Functions yang dapat melakukan auto-scale tanpa konfigurasi devops tambahan.
-  3. **Shared Types & Unified Codebase**: Frontend (React) dan Backend (API) berada dalam 1 repository TypeScript, memungkinkan berbagi interface dan mengurangi pemborosan waktu sinkronisasi tipe data.
-  4. **Single Source of Truth**: Logika pembacaan data ditempatkan di `src/lib/data.ts`. Server Component memanggil fungsi ini secara langsung (zero HTTP round-trip internal), sedangkan publik memanggilnya via HTTP melalui Route Handler.
+**Answer / Jawaban**:
+To ensure maximum scalability and clean separation of concerns, we follow a 3-layer architecture:
+- **Data Layer Abstraction (`/src/lib/data.ts`)**: UI components do not import raw JSON directly. Instead, they call data fetching functions in `/src/lib/data.ts`. This means if we switch from JSON to a relational database (PostgreSQL, Supabase) or a Headless CMS (Sanity, Strapi), we only need to update the data access methods in `data.ts` without touching a single line of UI component code.
+- **Modular JSON Files by Domain/Section**: Data is split into isolated JSON files (`hero.json`, `templates.json`, `pricing.json`, `testimonials.json`) rather than one massive file. This prevents merge conflicts, enables parallel development, and keeps individual data models light.
+- **Strict TypeScript Interfaces & Schema Validation**: Every JSON entity is typed via TypeScript interfaces (`TemplatesData`, `PricingData`, etc.) to prevent runtime `undefined` bugs and provide rich IDE IntelliSense.
 
-### 3. Bagaimana cara arahkan custom domain (mis. www.clientwebsite.com) ke project Vercel ini?
-**Jawaban**:
-1. **Tambahkan Domain di Dashboard Vercel**: Masuk ke menu *Project Settings > Domains*, lalu masukkan domain `www.clientwebsite.com` dan apex domain `clientwebsite.com`.
-2. **Konfigurasi DNS Record di Provider Domain** (Cloudflare / Namecheap / GoDaddy / Niagahoster):
-   - **Apex domain (`clientwebsite.com`)**: Buat **A Record** dengan Host `@` dan Value IP Vercel `76.76.21.21`.
-   - **Subdomain (`www.clientwebsite.com`)**: Buat **CNAME Record** dengan Host `www` dan Value `cname.vercel-dns.com`.
-3. **SSL & TLS Automated Verification**: Vercel akan otomatis melakukan validasi DNS dan menerbitkan sertifikat SSL/TLS gratis via Let's Encrypt secara otomatis dalam beberapa menit.
+---
 
-### 4. Kalau butuh admin panel untuk kelola konten, teknologi & pendekatan apa yang dipilih?
-**Jawaban**:
-- **Pendekatan Headless CMS**: Menggunakan **Sanity.io** atau **Strapi / Payload CMS**.
-  - *Alasan*: Headless CMS memisahkan backend manajemen konten dari frontend tampilan. Tim non-teknis (copywriter/marketer) dapat mengubah teks headline, mengunggah screenshot template baru, atau memperbarui harga melalui UI visual yang nyaman.
-- **On-Demand Incremental Static Revalidation (ISR)**: Ketika konten di-update di admin panel, Webhook Headless CMS akan memanggil endpoint Next.js `revalidatePath('/')` atau `revalidateTag('templates')`. Website publik akan langsung ter-update secara instant tanpa perlunya full rebuild/redeploy project di Vercel.
+### 2. Custom API Technology & Framework Selection
+*If you decide to create your own API, which technology or framework would you use and why?*
 
-### 5. Teknik apa yang dipakai supaya website tetap cepat di koneksi internet lambat?
-**Jawaban**:
-- **React Server Components (RSC)**: Komponen utama di-render di server sehingga JavaScript bundle yang dikirim ke browser sangat kecil.
-- **CSS-Only GPU Acceleration Animation**: Animasi marquee, transition hover, dan glassmorphic backdrop dibuat menggunakan CSS transform/opacity murni tanpa mengandalkan runtime library JavaScript yang berat.
-- **Font Display & Subsetting**: Menggunakan `font-display: swap` agar teks langsung muncul menggunakan font sistem lokal terlebih dahulu tanpa mengalami Flash of Unstyled Text (FOUT) atau render-blocking.
-- **Asset Resource Hints**: Menambahkan `<link rel="preconnect">` untuk domain gambar eksternal (Unsplash/Framer CDN) agar DNS lookup dan handshake TLS dilakukan lebih awal.
+**Answer / Jawaban**:
+We selected **Next.js 14 Serverless Route Handlers (`/src/app/api/.../route.ts`)**.
 
-### 6. Kalau ada form, bagaimana cara kirim data ke backend dengan aman?
-**Jawaban**:
-- **Server Actions & API Route Isolation**: Pengiriman data form menggunakan Next.js Server Actions atau API Route POST request dengan enkripsi HTTPS mandatory.
-- **Input Sanitization & Schema Validation**: Validasi data form di sisi server menggunakan **Zod** schema untuk mencegah XSS (Cross-Site Scripting) dan SQL Injection.
-- **Rate Limiting**: Memasang middleware rate limiting (misal menggunakan `@upstash/ratelimit`) berdasarkan IP address pengirim untuk mencegah bot spam submission.
-- **CSRF & Secret Token Management**: Menyimpan API Key/Secret token backend strictly di Environment Variable server (`process.env.SECRET_KEY`) tanpa pernah mengeksposnya ke JavaScript client bundle (`NEXT_PUBLIC_`).
+**Why Next.js Route Handlers**:
+1. **Zero Extra Overhead & Unified Infrastructure**: We do not need a separate Express or NestJS server. Frontend UI and backend API reside in the same project, simplifying deployment and version control.
+2. **Serverless Auto-Scaling on Vercel**: Route handlers deploy as Vercel Edge/Serverless Functions that scale dynamically from 0 to thousands of requests automatically.
+3. **Shared TypeScript Schemas**: Frontend components and backend API endpoints share identical TypeScript types, eliminating type mismatch errors.
+4. **Single Source of Truth Pattern**: Internal Server Components call `/src/lib/data.ts` directly with zero HTTP latency overhead, while external clients fetch data via standard REST API endpoints over HTTP (`/api/templates`).
 
-### 7. Strategi apa untuk optimasi gambar tanpa mengorbankan kualitas?
-**Jawaban**:
-- **Penggunaan Component `<Image>` Next.js**: Komponen `next/image` otomatis melakukan konversi gambar ke format Next-Gen modern yang sangat efisien (**AVIF** dan **WebP**), kompresi otomatis berdasarkan device pixel ratio, dan generasi `srcset` responsif.
-- **Penggunaan Format Vector (SVG)**: Untuk logo, ikon interface, dan badge visual menggunakan SVG murni (Lucide React) yang ukurannya sangat kecil (<1KB) dan tidak pecah di layar Retina 4K.
-- **LCP Optimization vs Below-the-Fold Lazy Loading**: Gambar hero utama diberi atribut `priority={true}` agar langsung di-preload untuk skor LCP tinggi, sedangkan seluruh gambar kartu template di bawah fold dipasang `loading="lazy"`.
-- **Dimension Bounding**: Selalu memberikan ukuran width/height atau `aspect-ratio` container yang pasti untuk mencegah Cumulative Layout Shift (CLS).
+---
+
+### 3. Custom Domain Configuration on Vercel
+*How would you configure a custom domain (for example, www.clientwebsite.com) to point to your deployed project on Vercel?*
+
+**Answer / Jawaban**:
+1. **Add Domains in Vercel Dashboard**: Navigate to **Project Settings > Domains** in Vercel, and add both `www.clientwebsite.com` and the apex domain `clientwebsite.com`.
+2. **Configure DNS Records at Provider** (Cloudflare / Namecheap / GoDaddy / Niagahoster):
+   - **Apex Domain (`clientwebsite.com`)**: Create an **A Record** pointing `@` to Vercel's IP address: `76.76.21.21`.
+   - **Subdomain (`www.clientwebsite.com`)**: Create a **CNAME Record** pointing `www` to `cname.vercel-dns.com`.
+3. **Automatic SSL/TLS Verification**: Vercel automatically verifies the DNS propagation and issues an SSL certificate via Let's Encrypt within minutes.
+
+---
+
+### 4. Admin Panel & CMS Strategy
+*If your project requires an admin panel to manage the website content, what technologies and approaches would you choose?*
+
+**Answer / Jawaban**:
+- **Headless CMS Selection**: We recommend **Sanity.io** or **Payload CMS (Next.js native)**.
+  - *Why*: Gives content managers and non-technical editors an intuitive visual dashboard to edit titles, update pricing tiers, or upload template media without making code deployments.
+- **On-Demand Incremental Static Regeneration (ISR)**: When content is published in the CMS, a CMS Webhook triggers a Next.js revalidation endpoint (`revalidatePath('/')` or `revalidateTag('templates')`). The live production site updates instantly without requiring a full rebuild or redeploy cycle on Vercel.
+
+---
+
+### 5. Website Speed Optimization Techniques for Slow Connections
+*What techniques would you use to ensure the website loads quickly even on slow internet connections?*
+
+**Answer / Jawaban**:
+- **React Server Components (RSC)**: Renders static layout and data fetching on the server, drastically reducing the client-side JavaScript bundle size.
+- **Pure CSS GPU-Accelerated Animations**: Animations (horizontal marquee, vertical video scroll, hover effects) use pure CSS `transform: translate3d()` and `opacity` to run smoothly at 60FPS on GPU without heavy JS animation frameworks.
+- **Font Subsetting & Swap**: Uses `font-display: swap` to prevent render-blocking FOUT (Flash of Unstyled Text).
+- **Resource Hints & Preconnecting**: Implements `<link rel="preconnect">` for external media domains (Unsplash, Video CDNs) so DNS lookups and TLS handshakes complete early.
+
+---
+
+### 6. Secure Form Submission to Backend Server
+*If you implement a form, how would you securely send the data to the backend server?*
+
+**Answer / Jawaban**:
+- **Next.js Server Actions & SSL Encryption**: Form data is transmitted securely over HTTPS via Next.js Server Actions or dedicated POST Route Handlers.
+- **Server-Side Input Sanitization & Schema Validation**: Validate all payload fields on the server using **Zod** schema validation to prevent XSS (Cross-Site Scripting) and Injection vulnerabilities.
+- **Rate Limiting Middleware**: Attach rate limiting middleware (e.g. `@upstash/ratelimit` over Redis) based on client IP to block bot spamming.
+- **Secret & API Key Security**: Environment secrets (`DATABASE_URL`, `STRIPE_SECRET_KEY`) are kept strictly in server-side `process.env` without ever exposing them to the client bundle.
+
+---
+
+### 7. Image & Media Optimization Strategies
+*What strategies do you use to optimize images for performance without sacrificing quality?*
+
+**Answer / Jawaban**:
+- **Next.js `<Image />` Component**: Automatically converts images to next-gen formats (**AVIF** and **WebP**), calculates responsive `srcset` sizes based on device screen width, and applies optimal compression.
+- **SVG Vector Graphics**: Logos, badges, and interface icons use native inline vector SVGs (Lucide React) which weigh under 1KB and remain crisp on Retina/4K displays.
+- **LCP Optimization & Lazy Loading**: Critical above-the-fold hero media uses `priority={true}` for fast Largest Contentful Paint (LCP), while all below-the-fold images use native `loading="lazy"`.
+- **Fixed Aspect Ratios & Layout Stability**: All media containers enforce explicit aspect-ratio or dimensional bounds to eliminate Cumulative Layout Shift (CLS).
