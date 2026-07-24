@@ -1,129 +1,120 @@
-import React from "react";
-import defaultTemplatesData from "@/data/templates.json";
-import { ArrowUpRight, ExternalLink, Sparkles, Check } from "lucide-react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
-import type { TemplatesData } from "@/lib/data";
 
-interface FeaturedGridProps {
-  data?: TemplatesData;
-}
+const EXACT_FEATURED_TEMPLATES = [
+  {
+    id: "selene",
+    name: "Selene",
+    badge: "NEW",
+    category: "AI SAAS",
+    price: "$129 USD",
+    imgPrimary: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
+    imgSecondary: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "zenna",
+    name: "Zenna",
+    badge: null,
+    category: "YOGA STUDIO",
+    price: "$129 USD",
+    imgPrimary: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop",
+    imgSecondary: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    id: "traction",
+    name: "Traction",
+    badge: null,
+    category: "SMMA",
+    price: "$129 USD",
+    imgPrimary: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop",
+    imgSecondary: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=800&auto=format&fit=crop",
+  },
+];
 
-/**
- * FeaturedGrid Component
- * Replicates the template preview grid directly beneath the hero section on browser.supply.
- */
-export default function FeaturedGrid({ data = defaultTemplatesData }: FeaturedGridProps) {
-  const templatesData = data;
+export default function FeaturedGrid() {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
-    <section id="templates" className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-        <div className="space-y-2 max-w-2xl text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-purple/10 border border-accent-purple/20 text-xs font-semibold text-accent-purple">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>{templatesData.header.badge}</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            {templatesData.header.title}
-          </h2>
-          <p className="text-brand-muted text-sm leading-relaxed">
-            {templatesData.header.subtitle}
-          </p>
-        </div>
+    <section id="templates" className="py-20 px-5 sm:px-8 max-w-[1200px] mx-auto text-left">
+      {/* Top Badge: WHICH TEMPLATE IS FOR ME? */}
+      <div className="mb-4">
+        <span className="inline-block px-3 py-1 rounded-full bg-blue-950/60 border border-blue-800/40 text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+          WHICH TEMPLATE IS FOR ME?
+        </span>
+      </div>
+
+      {/* Header Row: Headline + View All Button */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
+        <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-[1.1] tracking-tight">
+          Premium templates<br />built to drive results.
+        </h2>
 
         <a
-          href={templatesData.header.viewAllHref}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-white hover:text-accent-purple bg-white/5 border border-white/10 hover:border-accent-purple/40 px-5 py-2.5 rounded-full transition-all shrink-0 self-start md:self-auto"
+          href="#pricing"
+          className="px-6 py-2.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-all text-center self-start sm:self-auto shrink-0 shadow-md"
         >
-          <span>{templatesData.header.viewAllText}</span>
-          <ArrowUpRight className="w-4 h-4" />
+          View all
         </a>
       </div>
 
-      {/* Templates Staggered/Masonry Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {templatesData.featured.map((template) => (
-          <div
-            key={template.id}
-            className="group relative rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-all duration-300 flex flex-col overflow-hidden shadow-xl hover:-translate-y-1"
-          >
-            {/* Card Image Container */}
-            <div className="relative aspect-[16/11] w-full bg-zinc-900 overflow-hidden">
-              <Image
-                src={template.image}
-                alt={template.name}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-60" />
+      {/* 3 Featured Template Cards with Hover Image Swap */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {EXACT_FEATURED_TEMPLATES.map((t) => {
+          const isHovered = hoveredId === t.id;
+          return (
+            <div
+              key={t.id}
+              onMouseEnter={() => setHoveredId(t.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              className="cursor-pointer space-y-4 group"
+            >
+              {/* Card Image Container (Hover Swaps Image) */}
+              <div className="relative aspect-[16/11] rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/80 shadow-xl transition-all duration-300 group-hover:border-zinc-700">
+                {/* Primary Image */}
+                <Image
+                  src={t.imgPrimary}
+                  alt={t.name}
+                  fill
+                  className={`object-cover transition-all duration-500 ${
+                    isHovered ? "opacity-0 scale-105" : "opacity-100 scale-100"
+                  }`}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
 
-              {/* Badge Tag */}
-              <div className="absolute top-3 left-3">
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/80 text-white border border-white/10">
-                  {template.badge}
-                </span>
+                {/* Secondary Image (Appears on Mouse Hover) */}
+                <Image
+                  src={t.imgSecondary}
+                  alt={`${t.name} hover preview`}
+                  fill
+                  className={`object-cover transition-all duration-500 ${
+                    isHovered ? "opacity-100 scale-105" : "opacity-0 scale-100"
+                  }`}
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
               </div>
 
-              {/* External Preview Link Button */}
-              <a
-                href={template.previewUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/80 border border-white/20 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md hover:bg-white hover:text-black"
-                aria-label={`Preview ${template.name}`}
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
-
-            {/* Card Body */}
-            <div className="p-5 flex-1 flex flex-col justify-between space-y-4 text-left">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold text-accent-purple uppercase tracking-wider">
-                    {template.category}
-                  </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-base font-bold text-white">
-                      {template.price}
+              {/* Card Meta (Title + Badge & Category + Price) */}
+              <div className="space-y-1 text-left px-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white group-hover:text-zinc-200 transition-colors">
+                    {t.name}
+                  </h3>
+                  {t.badge && (
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800/60">
+                      {t.badge}
                     </span>
-                  </div>
+                  )}
                 </div>
 
-                <h3 className="text-lg font-bold text-white group-hover:text-accent-purple transition-colors">
-                  {template.name}
-                </h3>
-
-                <p className="text-xs text-brand-muted leading-relaxed line-clamp-2">
-                  {template.desc}
-                </p>
-              </div>
-
-              {/* Features List & CTA */}
-              <div className="pt-3 border-t border-white/5 space-y-3">
-                <div className="grid grid-cols-2 gap-1.5 text-[11px] text-zinc-400">
-                  {template.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5 truncate">
-                      <Check className="w-3 h-3 text-accent-purple shrink-0" />
-                      <span className="truncate">{feat}</span>
-                    </div>
-                  ))}
+                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
+                  {t.category} <span className="mx-1">•</span> {t.price}
                 </div>
-
-                <a
-                  href={template.previewUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2 rounded-full bg-white/5 hover:bg-white text-white hover:text-black border border-white/10 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
-                >
-                  <span>Live Preview</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

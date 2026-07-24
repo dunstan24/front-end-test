@@ -1,4 +1,3 @@
-import React from "react";
 import defaultTestimonialsData from "@/data/testimonials.json";
 import { Star } from "lucide-react";
 import Image from "next/image";
@@ -45,13 +44,13 @@ interface TestimonialsGridProps {
  *   - White 5-star ratings, crisp quotes, avatars, and customer names
  *   - Matt's spotlight case study section at the bottom with founder photo & CTA buttons
  */
-export default function TestimonialsGrid({ data = defaultTestimonialsData as TestimonialsData }: TestimonialsGridProps) {
-  const header = data.header;
-  const grid = data.grid;
-  const spotlight = data.spotlight;
+export default function TestimonialsGrid({ data }: TestimonialsGridProps) {
+  const header = data?.header || defaultTestimonialsData.header;
+  const grid = data?.grid || defaultTestimonialsData.grid;
+  const spotlight = data?.spotlight || defaultTestimonialsData.spotlight;
 
   return (
-    <section id="testimonials" className="py-20 px-4 sm:px-6 lg:px-8 max-w-[1240px] mx-auto font-sans">
+    <section id="testimonials" className="py-20 px-5 sm:px-8 max-w-[1200px] mx-auto font-sans">
       {/* Top Header */}
       <div className="mb-10 text-left">
         {/* Top Pill Badge */}
@@ -104,6 +103,7 @@ export default function TestimonialsGrid({ data = defaultTestimonialsData as Tes
                     src={item.avatar}
                     alt={item.name}
                     fill
+                    sizes="28px"
                     className="object-cover"
                   />
                 </div>
@@ -123,6 +123,7 @@ export default function TestimonialsGrid({ data = defaultTestimonialsData as Tes
               src={spotlight.image}
               alt="Matt launched his new site"
               fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover object-center"
             />
           </div>

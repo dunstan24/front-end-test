@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import defaultPricingData from "@/data/pricing.json";
 import {
   Zap,
@@ -18,69 +18,44 @@ import {
   Check
 } from "lucide-react";
 
-interface OptionItem {
-  id: string;
-  label: string;
-  extraPrice?: number;
-  price?: number;
-  defaultSelected?: boolean;
-  disabled?: boolean;
-  icon?: string;
-}
-
-interface FeatureItem {
-  text: string;
-  icon: string;
-}
+const ICON_CLASS = "w-4 h-4 text-zinc-400 shrink-0";
 
 /**
- * Helper to render icons based on key
+ * Icon lookup map — replaces the 40-line switch statement.
+ * O(1) lookup instead of sequential case matching.
  */
-const renderIcon = (key: string) => {
-  switch (key) {
-    case "zap":
-      return <Zap className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "refresh":
-      return <RefreshCw className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "play":
-      return <PlayCircle className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "infinity":
-      return <Infinity className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "layers":
-      return <Layers className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "sparkles":
-      return <Sparkles className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "headphones":
-      return <Headphones className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "feather":
-      return <Feather className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "rocket":
-      return <Rocket className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "repeat":
-      return <RotateCcw className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "framer":
-      return (
-        <svg className="w-4 h-4 text-zinc-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z" />
-        </svg>
-      );
-    case "figma":
-      return (
-        <svg className="w-4 h-4 text-zinc-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 12c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3-3-1.343-3-3zm-6 6c0-1.657 1.343-3 3-3h3v3c0 1.657-1.343 3-3 3s-3-1.343-3-3zm0-6c0-1.657 1.343-3 3-3h3v6H9c-1.657 0-3-1.343-3-3zm0-6c0-1.657 1.343-3 3-3h3v6H9c-1.657 0-3-1.343-3-3zm6-3h3c1.657 0 3 1.343 3 3s-1.343 3-3 3h-3V3z" />
-        </svg>
-      );
-    case "layout":
-      return <Layout className="w-4 h-4 text-zinc-400 shrink-0" />;
-    case "checkCircle":
-      return <CheckCircle2 className="w-4 h-4 text-zinc-400 shrink-0" />;
-    default:
-      return <Check className="w-4 h-4 text-zinc-400 shrink-0" />;
-  }
+const ICON_MAP: Record<string, React.ReactNode> = {
+  zap: <Zap className={ICON_CLASS} />,
+  refresh: <RefreshCw className={ICON_CLASS} />,
+  play: <PlayCircle className={ICON_CLASS} />,
+  infinity: <Infinity className={ICON_CLASS} />,
+  layers: <Layers className={ICON_CLASS} />,
+  sparkles: <Sparkles className={ICON_CLASS} />,
+  headphones: <Headphones className={ICON_CLASS} />,
+  feather: <Feather className={ICON_CLASS} />,
+  rocket: <Rocket className={ICON_CLASS} />,
+  repeat: <RotateCcw className={ICON_CLASS} />,
+  layout: <Layout className={ICON_CLASS} />,
+  checkCircle: <CheckCircle2 className={ICON_CLASS} />,
+  framer: (
+    <svg className={ICON_CLASS} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z" />
+    </svg>
+  ),
+  figma: (
+    <svg className={ICON_CLASS} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 12c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3-3-1.343-3-3zm-6 6c0-1.657 1.343-3 3-3h3v3c0 1.657-1.343 3-3 3s-3-1.343-3-3zm0-6c0-1.657 1.343-3 3-3h3v6H9c-1.657 0-3-1.343-3-3zm0-6c0-1.657 1.343-3 3-3h3v6H9c-1.657 0-3-1.343-3-3zm6-3h3c1.657 0 3 1.343 3 3s-1.343 3-3 3h-3V3z" />
+    </svg>
+  ),
 };
 
-export default function PricingSection() {
-  const data = defaultPricingData;
+const renderIcon = (key: string) => ICON_MAP[key] ?? <Check className={ICON_CLASS} />;
+
+interface PricingSectionProps {
+  data?: typeof defaultPricingData;
+}
+
+export default function PricingSection({ data = defaultPricingData }: PricingSectionProps) {
 
   // State for Single Template Add-ons
   const [selectedAddons, setSelectedAddons] = useState<string[]>(["framer", "doneForYou"]);
@@ -88,28 +63,30 @@ export default function PricingSection() {
   // State for Custom Project Scope
   const [selectedScope, setSelectedScope] = useState<string>("landing");
 
-  // Toggle Single Template Add-ons
-  const toggleAddon = (id: string, disabled?: boolean) => {
+  // Toggle Single Template Add-ons (functional updater avoids stale closure)
+  const toggleAddon = useCallback((id: string, disabled?: boolean) => {
     if (disabled) return;
-    if (selectedAddons.includes(id)) {
-      setSelectedAddons(selectedAddons.filter((item) => item !== id));
-    } else {
-      setSelectedAddons([...selectedAddons, id]);
-    }
-  };
+    setSelectedAddons((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  }, []);
 
-  // Calculate Single Template Price
-  const singleTemplateTotalPrice =
-    data.singleTemplate.basePrice +
-    (selectedAddons.includes("figma") ? 39 : 0) +
-    (selectedAddons.includes("doneForYou") ? 370 : 0);
+  // Memoize derived price calculations
+  const singleTemplateTotalPrice = useMemo(
+    () =>
+      data.singleTemplate.basePrice +
+      (selectedAddons.includes("figma") ? 39 : 0) +
+      (selectedAddons.includes("doneForYou") ? 370 : 0),
+    [data.singleTemplate.basePrice, selectedAddons]
+  );
 
-  // Custom Project Selected Price
-  const customProjectPrice =
-    selectedScope === "multipage" ? "$4,995" : "$2,495";
+  const customProjectPrice = useMemo(
+    () => (selectedScope === "multipage" ? "$4,995" : "$2,495"),
+    [selectedScope]
+  );
 
   return (
-    <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 max-w-[1240px] mx-auto text-left font-sans">
+    <section id="pricing" className="py-20 px-5 sm:px-8 max-w-[1200px] mx-auto text-left font-sans">
       {/* Top Header */}
       <div className="mb-10">
         <div className="inline-flex items-center px-3 py-1 rounded-full bg-[#13182b] border border-[#27335c] text-[10px] sm:text-[11px] font-bold text-[#8ba0fe] uppercase tracking-widest mb-4 shadow-sm">

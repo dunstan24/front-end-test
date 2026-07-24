@@ -1,5 +1,17 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+/**
+ * Self-hosted Inter font via next/font — eliminates the external Google Fonts
+ * network request, prevents FOUT, and enables automatic font subsetting.
+ */
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Premium Framer Website Templates for Business | Browser.supply",
@@ -20,14 +32,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
+        {/* DNS preconnect for external resources — saves 100-300ms per domain */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://vjs.zencdn.net" />
+        <link rel="dns-prefetch" href="https://vjs.zencdn.net" />
+        <link rel="preconnect" href="https://interactive-examples.mdn.mozilla.net" />
+        <link rel="dns-prefetch" href="https://interactive-examples.mdn.mozilla.net" />
       </head>
       <body>{children}</body>
     </html>

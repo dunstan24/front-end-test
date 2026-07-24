@@ -1,5 +1,10 @@
-// Data layer — single source of truth for both Server Components and API Route Handlers.
-// All JSON data lives in /src/data/*.json and is imported here as typed constants.
+/**
+ * Data layer — single source of truth for both component types and API route data access.
+ *
+ * Types: Inferred from JSON imports, used in component prop interfaces.
+ * Fetchers: Used exclusively by API Route Handlers in /src/app/api/.
+ * Components import JSON directly for zero-overhead static data access.
+ */
 
 import navigationData from "@/data/navigation.json";
 import heroData from "@/data/hero.json";
@@ -14,7 +19,8 @@ import quizData from "@/data/quiz.json";
 import creatorData from "@/data/creator.json";
 import footerData from "@/data/footer.json";
 
-// TypeScript type exports
+/* ─── Type Exports (used by component prop interfaces) ─── */
+
 export type NavigationData = typeof navigationData;
 export type HeroData = typeof heroData;
 export type MarqueeTestimonialsData = typeof marqueeTestimonialsData;
@@ -28,10 +34,12 @@ export type QuizData = typeof quizData;
 export type CreatorData = typeof creatorData;
 export type FooterData = typeof footerData;
 
-// Data fetcher functions (async for API route compatibility)
+/* ─── Data Fetchers (used by API Route Handlers in /src/app/api/) ─── */
+
 export async function getNavigation() { return navigationData; }
 export async function getHero() { return heroData; }
 export async function getMarqueeTestimonials() { return marqueeTestimonialsData; }
+
 export async function getTemplates(params?: { category?: string; query?: string }) {
   let items = templatesData.featured;
   if (params?.category) {
@@ -48,16 +56,24 @@ export async function getTemplates(params?: { category?: string; query?: string 
   }
   return { header: templatesData.header, featured: items, total: items.length };
 }
+
 export async function getFeatures() { return featuresData; }
 export async function getHowItWorks() { return howItWorksData; }
+
 export async function getTestimonials(params?: { template?: string }) {
   let grid = testimonialsData.grid;
   if (params?.template) {
     const t = params.template.toLowerCase();
     grid = grid.filter(item => item.quote.toLowerCase().includes(t));
   }
-  return { header: testimonialsData.header, grid, total: grid.length };
+  return {
+    header: testimonialsData.header,
+    grid,
+    spotlight: testimonialsData.spotlight,
+    total: grid.length,
+  };
 }
+
 export async function getCaseStudy() { return caseStudyData; }
 export async function getPricing() { return pricingData; }
 export async function getQuiz() { return quizData; }

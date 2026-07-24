@@ -1,13 +1,15 @@
-"use client";
+// Server Component — no hooks or interactivity needed
 
-import React from "react";
 import defaultCreatorData from "@/data/creator.json";
 
-export default function AboutCreator() {
-  const data = defaultCreatorData;
+interface AboutCreatorProps {
+  data?: typeof defaultCreatorData;
+}
+
+export default function AboutCreator({ data = defaultCreatorData }: AboutCreatorProps) {
 
   return (
-    <section id="about-creator" className="py-20 px-4 sm:px-6 lg:px-8 max-w-[1240px] mx-auto text-left font-sans">
+    <section id="about-creator" className="py-20 px-5 sm:px-8 max-w-[1200px] mx-auto text-left font-sans">
       {/* Section Header */}
       <div className="mb-10 text-left">
         {/* Top Pill Badge */}
@@ -41,7 +43,6 @@ export default function AboutCreator() {
             muted
             playsInline
             preload="auto"
-            onCanPlay={(e) => e.currentTarget.play()}
             className="absolute inset-0 w-full h-full object-cover object-center"
           >
             <source src={data.videoUrl} type="video/mp4" />

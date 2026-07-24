@@ -1,145 +1,93 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import defaultNavData from "@/data/navigation.json";
-import { Twitter, Youtube, Menu, X, Globe } from "lucide-react";
-import type { NavigationData } from "@/lib/data";
+import React, { useState, useEffect, useCallback } from "react";
+import { LogoIcon, XIcon, YouTubeIcon, CloseIcon, HamburgerIcon } from "@/components/ui/Icons";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
 interface HeaderNavProps {
-  data?: NavigationData;
+  onQuiz: () => void;
 }
 
-/**
- * Minimalist Sticky Header Navigation matching browser.supply reference exactly:
- * - Left: Logo icon + "Browser.supply"
- * - Center: Plain text navigation links (Templates, Live examples, Support, Blog)
- * - Right: X icon, YouTube icon, and white "Bundle" pill button
- */
-export default function HeaderNav({ data = defaultNavData }: HeaderNavProps) {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const NAV_LINKS = ["Templates", "Live examples", "Support", "Blog"];
 
-  const navData = data;
+export default function HeaderNav({ onQuiz }: HeaderNavProps) {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-black/90 backdrop-blur-md border-b border-zinc-900 py-3 shadow-md"
-          : "bg-black py-4"
-      }`}
+      style={{
+        backgroundColor: scrolled ? "rgba(0,0,0,0.92)" : "#000",
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+      }}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-zinc-900"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand Logo */}
-        <a href={navData.logo.href} className="flex items-center gap-2 group">
-          <Globe className="w-4 h-4 text-white group-hover:text-zinc-300 transition-colors" />
-          <span className="font-semibold text-white tracking-tight text-sm sm:text-base">
-            {navData.logo.text}
-          </span>
+      <div className="max-w-[1200px] mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+        {/* Logo */}
+        <a href="/" className="flex items-center gap-2 shrink-0">
+          <LogoIcon className="w-5 h-5 text-white" />
+          <span className="text-sm font-semibold text-white tracking-tight">Browser.supply</span>
         </a>
 
-        {/* Desktop Navigation Links */}
+        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navData.navLinks.map((link, idx) => (
-            <a
-              key={idx}
-              href={link.href}
-              className="text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-colors"
-            >
-              {link.label}
+          {NAV_LINKS.map((l) => (
+            <a key={l} href="#" className="text-[13px] text-zinc-400 hover:text-white transition-colors">
+              {l}
             </a>
           ))}
         </nav>
 
-        {/* Social Icons & Bundle CTA */}
+        {/* Right: Social + Bundle */}
         <div className="hidden md:flex items-center gap-4">
-          <a
-            href={navData.socialLinks[0].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-white transition-colors p-1"
-            aria-label="X (Twitter)"
-          >
-            <Twitter className="w-4 h-4" />
+          <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors" aria-label="Follow us on X">
+            <XIcon />
           </a>
-          <a
-            href={navData.socialLinks[1].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-white transition-colors p-1"
-            aria-label="YouTube"
-          >
-            <Youtube className="w-4 h-4" />
+          <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white transition-colors" aria-label="Subscribe on YouTube">
+            <YouTubeIcon />
           </a>
-
-          <a
-            href={navData.cta.href}
-            className="px-5 py-2 text-xs font-semibold rounded-full bg-white text-black hover:bg-zinc-200 transition-all"
-          >
-            {navData.cta.text}
+          <a href="#pricing" className="px-4 py-1.5 rounded-full bg-white text-black text-[13px] font-semibold hover:bg-zinc-100 transition-colors">
+            Bundle
           </a>
         </div>
 
-        {/* Mobile Hamburger Button */}
+        {/* Mobile hamburger */}
         <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-zinc-300 hover:text-white"
-          aria-label="Toggle menu"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden p-2 text-zinc-400"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {mobileOpen ? <CloseIcon className="w-5 h-5" /> : <HamburgerIcon />}
         </button>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-black border-b border-zinc-900 px-4 py-6 space-y-4 animate-fade-in">
-          <div className="flex flex-col space-y-3">
-            {navData.navLinks.map((link, idx) => (
-              <a
-                key={idx}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-medium text-zinc-300 hover:text-white py-1"
-              >
-                {link.label}
-              </a>
-            ))}
-          </div>
-
+      {/* Mobile Drawer */}
+      {mobileOpen && (
+        <div className="md:hidden bg-black border-t border-zinc-900 px-5 pb-6 pt-4 space-y-4">
+          {NAV_LINKS.map((l) => (
+            <a key={l} href="#" onClick={closeMobile} className="block text-sm text-zinc-400 hover:text-white py-1">
+              {l}
+            </a>
+          ))}
           <div className="pt-4 border-t border-zinc-900 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <a
-                href={navData.socialLinks[0].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-white"
-              >
-                <Twitter className="w-4 h-4" />
+            <div className="flex gap-3">
+              <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white" aria-label="Follow us on X">
+                <XIcon />
               </a>
-              <a
-                href={navData.socialLinks[1].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-zinc-400 hover:text-white"
-              >
-                <Youtube className="w-4 h-4" />
+              <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-white" aria-label="Subscribe on YouTube">
+                <YouTubeIcon />
               </a>
             </div>
-
-            <a
-              href={navData.cta.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-2 text-xs font-semibold rounded-full bg-white text-black"
-            >
-              {navData.cta.text}
+            <a href="#pricing" onClick={closeMobile} className="px-4 py-1.5 rounded-full bg-white text-black text-sm font-semibold">
+              Bundle
             </a>
           </div>
         </div>

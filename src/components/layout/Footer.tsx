@@ -1,83 +1,51 @@
-import React from "react";
-import defaultFooterData from "@/data/footer.json";
-import { Globe, Twitter, Youtube } from "lucide-react";
-import type { FooterData } from "@/lib/data";
+// Server Component — no hooks or interactivity needed
 
-interface FooterProps {
-  data?: FooterData;
-}
+import { LogoIcon, XIcon, YouTubeIcon } from "@/components/ui/Icons";
+import { SOCIAL_LINKS } from "@/lib/constants";
 
-/**
- * Footer Component
- * Replicates Section 10 of browser.supply:
- * Logo, tagline, Products & Resources links, social icons, and copyright.
- */
-export default function Footer({ data = defaultFooterData }: FooterProps) {
-  const footerData = data;
-
+export default function Footer() {
   return (
-    <footer className="bg-black py-12 px-4 sm:px-6 lg:px-8 text-left">
-      <div className="max-w-7xl mx-auto space-y-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-          {/* Left Brand Area */}
-          <div className="md:col-span-6 space-y-4">
+    <footer className="bg-black py-12 px-5 sm:px-8">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
+          <div className="md:col-span-6 space-y-3 flex flex-col items-start text-left">
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-white" />
-              <span className="font-bold text-white tracking-tight text-base">
-                {footerData.brand.name}
-              </span>
+              <LogoIcon className="w-4 h-4 text-white" />
+              <span className="text-sm font-semibold text-white">Browser.supply</span>
             </div>
-            <p className="text-xs text-zinc-400 max-w-sm leading-relaxed">
-              {footerData.brand.tagline}
+            <p className="text-[13px] text-zinc-500 max-w-xs leading-relaxed">
+              High-converting Framer & Webflow templates built for modern startups.
             </p>
           </div>
-
-          {/* Right Links Columns */}
-          <div className="md:col-span-6 grid grid-cols-2 gap-8">
-            {footerData.columns.map((col, idx) => (
-              <div key={idx} className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-white">
-                  {col.title}
-                </h4>
-                <ul className="space-y-2">
-                  {col.links.map((link, lIdx) => (
-                    <li key={lIdx}>
-                      <a
-                        href={link.href}
-                        className="text-xs text-zinc-400 hover:text-white transition-colors"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <div className="md:col-span-3 space-y-3 flex flex-col items-start text-left">
+            <div className="text-xs font-bold uppercase tracking-wider text-white">Products</div>
+            <div className="space-y-2">
+              {["Templates", "Bundle", "Custom Project"].map((l) => (
+                <a key={l} href="#" className="block text-[13px] text-zinc-500 hover:text-white transition-colors">
+                  {l}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div className="md:col-span-3 space-y-3 flex flex-col items-start text-left">
+            <div className="text-xs font-bold uppercase tracking-wider text-white">Resources</div>
+            <div className="space-y-2">
+              {["Live examples", "Support", "Blog"].map((l) => (
+                <a key={l} href="#" className="block text-[13px] text-zinc-500 hover:text-white transition-colors">
+                  {l}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <p>{footerData.copyright}</p>
-
+        <div className="pt-8 border-t border-zinc-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-zinc-600">
+          <span>© 2026 Browser Supply. All rights reserved.</span>
           <div className="flex items-center gap-4">
-            <a
-              href="https://x.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-zinc-500 hover:text-white transition-colors"
-              aria-label="X"
-            >
-              <Twitter className="w-4 h-4" />
+            <a href={SOCIAL_LINKS.x} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Follow us on X">
+              <XIcon />
             </a>
-            <a
-              href="https://youtube.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-zinc-500 hover:text-white transition-colors"
-              aria-label="YouTube"
-            >
-              <Youtube className="w-4 h-4" />
+            <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" aria-label="Subscribe on YouTube">
+              <YouTubeIcon />
             </a>
           </div>
         </div>

@@ -1,150 +1,97 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import defaultQuizData from "@/data/quiz.json";
 import { ArrowRight, X, Check, Sparkles } from "lucide-react";
 import Image from "next/image";
+import { TEMPLATE_SCREENSHOTS } from "@/lib/constants";
 
-const COLLAGE_IMAGES = [
-  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=600&auto=format&fit=crop",
+/** Column layout for the animated background gallery */
+const GALLERY_COLUMNS: { indices: number[]; height: number; direction: "up" | "down"; visibility?: string }[] = [
+  { indices: [0, 4, 0, 4], height: 500, direction: "up" },
+  { indices: [1, 5, 1, 5], height: 520, direction: "down" },
+  { indices: [2, 6, 2, 6], height: 510, direction: "up", visibility: "hidden sm:block" },
+  { indices: [3, 7, 3, 7], height: 530, direction: "down", visibility: "hidden md:block" },
+  { indices: [8, 2, 8, 2], height: 500, direction: "up", visibility: "hidden lg:block" },
+  { indices: [5, 1, 5, 1], height: 520, direction: "down", visibility: "hidden lg:block" },
 ];
 
-const col1 = [COLLAGE_IMAGES[0], COLLAGE_IMAGES[4], COLLAGE_IMAGES[0], COLLAGE_IMAGES[4]];
-const col2 = [COLLAGE_IMAGES[1], COLLAGE_IMAGES[5], COLLAGE_IMAGES[1], COLLAGE_IMAGES[5]];
-const col3 = [COLLAGE_IMAGES[2], COLLAGE_IMAGES[6], COLLAGE_IMAGES[2], COLLAGE_IMAGES[6]];
-const col4 = [COLLAGE_IMAGES[3], COLLAGE_IMAGES[7], COLLAGE_IMAGES[3], COLLAGE_IMAGES[7]];
-const col5 = [COLLAGE_IMAGES[8], COLLAGE_IMAGES[2], COLLAGE_IMAGES[8], COLLAGE_IMAGES[2]];
-const col6 = [COLLAGE_IMAGES[5], COLLAGE_IMAGES[1], COLLAGE_IMAGES[5], COLLAGE_IMAGES[1]];
+interface QuizCTAProps {
+  data?: typeof defaultQuizData;
+}
 
-export default function QuizCTA() {
-  const quizData = defaultQuizData;
+export default function QuizCTA({ data = defaultQuizData }: QuizCTAProps) {
+  const quizData = data;
   const [modalOpen, setModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResult, setShowResult] = useState(false);
 
-  const handleSelectOption = (qId: number, option: string) => {
-    const nextAnswers = { ...answers, [qId]: option };
-    setAnswers(nextAnswers);
-
-    if (currentStep < quizData.quizQuestions.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
+  const handleSelectOption = useCallback((qId: number, option: string) => {
+    setAnswers((prev) => ({ ...prev, [qId]: option }));
+    setCurrentStep((prev) => {
+      if (prev < quizData.quizQuestions.length - 1) return prev + 1;
       setShowResult(true);
-    }
-  };
+      return prev;
+    });
+  }, [quizData.quizQuestions.length]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setCurrentStep(0);
     setAnswers({});
     setShowResult(false);
-  };
+  }, []);
 
   return (
     <section id="quiz" className="py-0 relative w-full overflow-hidden bg-black border-none font-sans">
-      {/* Edge-to-Edge 100% Full Width & Extra Tall Height Container (1000px) */}
       <div className="relative w-full overflow-hidden" style={{ height: "1000px" }}>
         
-        {/* Full Screen Edge-to-Edge Animated Moving Columns Grid (6 Columns) */}
+        {/* Animated Moving Columns Grid */}
         <div className="absolute inset-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 opacity-80 w-full px-2 pointer-events-none">
-          {/* Column 1 (Far Left: Moves UP) */}
-          <div className="overflow-hidden relative">
-            <div className="flex flex-col gap-3.5 animate-marquee-vertical-up">
-              {col1.map((src, idx) => (
-                <div key={idx} className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0" style={{ height: "500px" }}>
-                  <Image src={src} alt="Template preview" fill className="object-cover opacity-90" />
-                </div>
-              ))}
+          {GALLERY_COLUMNS.map((col, colIdx) => (
+            <div key={colIdx} className={`${col.visibility ?? ""} overflow-hidden relative`}>
+              <div className={`flex flex-col gap-3.5 ${
+                col.direction === "up" ? "animate-marquee-vertical-up" : "animate-marquee-vertical-down"
+              }`}>
+                {col.indices.map((imgIdx, itemIdx) => (
+                  <div
+                    key={itemIdx}
+                    className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0"
+                    style={{ height: `${col.height}px` }}
+                  >
+                    <Image
+                      src={TEMPLATE_SCREENSHOTS[imgIdx]}
+                      alt="Template preview"
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 16vw"
+                      className="object-cover opacity-90"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-
-          {/* Column 2 (Moves DOWN) */}
-          <div className="overflow-hidden relative">
-            <div className="flex flex-col gap-3.5 animate-marquee-vertical-down">
-              {col2.map((src, idx) => (
-                <div key={idx} className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0" style={{ height: "520px" }}>
-                  <Image src={src} alt="Template preview" fill className="object-cover opacity-90" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 3 (Moves UP) */}
-          <div className="hidden sm:block overflow-hidden relative">
-            <div className="flex flex-col gap-3.5 animate-marquee-vertical-up">
-              {col3.map((src, idx) => (
-                <div key={idx} className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0" style={{ height: "510px" }}>
-                  <Image src={src} alt="Template preview" fill className="object-cover opacity-90" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 4 (Moves DOWN) */}
-          <div className="hidden md:block overflow-hidden relative">
-            <div className="flex flex-col gap-3.5 animate-marquee-vertical-down">
-              {col4.map((src, idx) => (
-                <div key={idx} className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0" style={{ height: "530px" }}>
-                  <Image src={src} alt="Template preview" fill className="object-cover opacity-90" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 5 (Moves UP) */}
-          <div className="hidden lg:block overflow-hidden relative">
-            <div className="flex flex-col gap-3.5 animate-marquee-vertical-up">
-              {col5.map((src, idx) => (
-                <div key={idx} className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0" style={{ height: "500px" }}>
-                  <Image src={src} alt="Template preview" fill className="object-cover opacity-90" />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Column 6 (Far Right: Moves DOWN) */}
-          <div className="hidden lg:block overflow-hidden relative">
-            <div className="flex flex-col gap-3.5 animate-marquee-vertical-down">
-              {col6.map((src, idx) => (
-                <div key={idx} className="relative rounded-2xl overflow-hidden border border-zinc-800/80 bg-zinc-900 shrink-0" style={{ height: "520px" }}>
-                  <Image src={src} alt="Template preview" fill className="object-cover opacity-90" />
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* 100% Full Width Smooth Vignette & Fade Overlays */}
+        {/* Full Width Smooth Vignette & Fade Overlays */}
         <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] pointer-events-none z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none z-10" />
 
-        {/* Centered Overlay Content Container (Positioned lower down with smaller text) */}
+        {/* Centered Overlay Content */}
         <div className="relative z-20 h-full flex flex-col items-center justify-end pb-20 sm:pb-24 text-center p-6 sm:p-12 space-y-4 max-w-2xl mx-auto">
-          {/* Top Pill Badge */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-800/60 text-[10px] sm:text-[11px] font-bold text-blue-400 uppercase tracking-widest backdrop-blur-md shadow-lg">
             <Sparkles className="w-3 h-3 text-blue-400" />
             <span>30-SECOND QUIZ</span>
           </div>
 
-          {/* Main Headline (Slightly smaller size) */}
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight drop-shadow-2xl">
             Not sure which<br />template is for you?
           </h2>
 
-          {/* Subtitle (Slightly smaller size) */}
           <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-normal max-w-md mx-auto drop-shadow-md">
             Answer a few short questions and get matched with a website template perfect for your business, with 30% off.
           </p>
 
-          {/* CTA Button */}
           <div className="pt-2">
             <button
               onClick={() => {
@@ -160,7 +107,7 @@ export default function QuizCTA() {
         </div>
       </div>
 
-      {/* Interactive 60-Second Quiz Modal */}
+      {/* Interactive Quiz Modal */}
       {modalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fade-in"
@@ -169,11 +116,14 @@ export default function QuizCTA() {
           <div
             className="relative max-w-lg w-full rounded-3xl bg-zinc-950 border border-zinc-800 p-6 sm:p-8 overflow-hidden shadow-2xl text-left space-y-6"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Template matching quiz"
           >
-            {/* Close Button */}
             <button
               onClick={() => setModalOpen(false)}
               className="absolute top-4 right-4 p-2 rounded-full bg-zinc-900 text-zinc-400 hover:text-white transition-colors"
+              aria-label="Close quiz"
             >
               <X className="w-4 h-4" />
             </button>
