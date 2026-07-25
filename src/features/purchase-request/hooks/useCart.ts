@@ -6,16 +6,28 @@
  * - Derived values (subtotal, tax, total, item count)
  * - Stock validation (prevents exceeding available stock)
  * - Submit simulation with loading state
+ * - localStorage persistence (cart survives page refresh)
  *
- * Centralizes business logic away from presentation components.
+ * Centralizes all business logic away from presentation components.
  */
 
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import type { CartItem, Product, PaymentMethodType } from "../types";
 
 const TAX_RATE = 0.11; // PPN 11%
+const CART_STORAGE_KEY = "orderhub_cart_v1";
+
+/** Safe JSON parse — returns fallback if parsing fails */
+function safeJsonParse<T>(value: string | null, fallback: T): T {
+  if (!value) return fallback;
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return fallback;
+  }
+}
 
 export interface UseCartReturn {
   /** Current cart items */
@@ -46,7 +58,7 @@ export interface UseCartReturn {
   resetOrder: () => void;
   /** Cart subtotal (before tax) */
   subtotal: number;
-  /** Tax amount */
+  /** Tax amount (PPN 11%) */
   tax: number;
   /** Grand total (subtotal + tax) */
   total: number;
@@ -54,15 +66,33 @@ export interface UseCartReturn {
   itemCount: number;
   /** Total quantity of all items */
   totalQuantity: number;
-  /** Validation: can submit order */
+  /** Whether the order can be submitted (cart non-empty + payment selected) */
   canSubmit: boolean;
 }
 
 export function useCart(): UseCartReturn {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // Initialise from localStorage on first render (SSR-safe)
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    if (typeof window === "undefined") return [];
+    return safeJsonParse<CartItem[]>(
+      localStorage.getItem(CART_STORAGE_KEY),
+      []
+    );
+  });
+
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Persist cart to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (cartItems.length > 0) {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    } else {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    }
+  }, [cartItems]);
 
   const addToCart = useCallback((product: Product, quantity: number = 1) => {
     if (product.stock <= 0) return;
@@ -129,6 +159,10 @@ export function useCart(): UseCartReturn {
     setIsSubmitted(true);
     setCartItems([]);
     setPaymentMethod(null);
+    // Clear persisted cart on successful submit
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    }
   }, []);
 
   const resetOrder = useCallback(() => {

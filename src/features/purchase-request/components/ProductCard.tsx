@@ -16,6 +16,7 @@ import Image from "next/image";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import QuantityInput from "@/components/ui/QuantityInput";
+import { CheckIcon } from "@/components/ui/Icons";
 import type { Product } from "@/features/purchase-request/types";
 import { formatPrice } from "@/features/purchase-request/data/products";
 
@@ -93,11 +94,9 @@ export default function ProductCard({
 
         {/* In-Cart Indicator overlay */}
         {isInCart && (
-          <div className="absolute bottom-3 right-3 z-10">
+          <div className="absolute bottom-3 right-3 z-10 animate-scale-in">
             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-600/90 backdrop-blur-md text-[10px] font-bold text-white shadow-lg">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
+              <CheckIcon className="w-3 h-3" />
               In Cart ({cartQuantity})
             </span>
           </div>

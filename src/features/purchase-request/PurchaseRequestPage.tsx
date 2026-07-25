@@ -20,6 +20,7 @@ import OrderSummary from "./components/OrderSummary";
 import PaymentMethod from "./components/PaymentMethod";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
+import Toast from "@/components/ui/Toast";
 import { Textarea } from "@/components/ui/Input";
 import {
   CheckIcon,
@@ -28,6 +29,7 @@ import {
 } from "@/components/ui/Icons";
 import { useCart } from "./hooks/useCart";
 import { formatPrice, ORDER_HISTORY } from "./data/products";
+import type { Product } from "./types";
 
 /** Maps order status to Badge variant */
 function getStatusVariant(status: string) {
@@ -43,6 +45,17 @@ export default function PurchaseRequestPage() {
   const catalogRef = useRef<HTMLDivElement>(null);
   const [showHistory, setShowHistory] = useState(false);
   const [orderNotes, setOrderNotes] = useState("");
+  const [toast, setToast] = useState({ visible: false, message: "" });
+
+  /** Wraps addToCart to show a toast notification */
+  const handleAddToCart = useCallback((product: Product, quantity: number) => {
+    cart.addToCart(product, quantity);
+    setToast({ visible: true, message: `${product.name} added to cart` });
+  }, [cart]);
+
+  const hideToast = useCallback(() => {
+    setToast((prev) => ({ ...prev, visible: false }));
+  }, []);
 
   const scrollToCart = useCallback(() => {
     cartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -93,7 +106,7 @@ export default function PurchaseRequestPage() {
                 <ProductCatalog
                   isInCart={cart.isInCart}
                   getCartQuantity={cart.getCartQuantity}
-                  onAddToCart={cart.addToCart}
+                  onAddToCart={handleAddToCart}
                   onUpdateQuantity={cart.updateQuantity}
                 />
               </div>
@@ -292,6 +305,13 @@ export default function PurchaseRequestPage() {
           <span>© 2026 OrderHub — Internal Purchase Request System</span>
         </div>
       </footer>
+
+      {/* Toast Notification */}
+      <Toast
+        message={toast.message}
+        visible={toast.visible}
+        onHide={hideToast}
+      />
     </div>
   );
 }

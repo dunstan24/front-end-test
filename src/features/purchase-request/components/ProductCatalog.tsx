@@ -14,7 +14,7 @@
 import React, { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import EmptyState from "@/components/ui/EmptyState";
-import { SearchIcon } from "@/components/ui/Icons";
+import { SearchIcon, CloseIcon } from "@/components/ui/Icons";
 import { PRODUCTS, PRODUCT_CATEGORIES } from "@/features/purchase-request/data/products";
 import type { Product, ProductCategory } from "@/features/purchase-request/types";
 
@@ -94,9 +94,7 @@ export default function ProductCatalog({
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded text-zinc-500 hover:text-white transition-colors"
                 aria-label="Clear search"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <CloseIcon className="w-4 h-4" />
               </button>
             )}
           </div>
