@@ -12,6 +12,7 @@
 "use client";
 
 import React from "react";
+import { PlusIcon, MinusIcon } from "@/components/ui/Icons";
 
 interface QuantityInputProps {
   /** Current quantity value */
@@ -72,9 +73,7 @@ export default function QuantityInput({
             ${disabled || isAtMin ? "opacity-30 cursor-not-allowed" : "hover:text-white hover:bg-zinc-800"}`}
           aria-label="Decrease quantity"
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-          </svg>
+          <MinusIcon className="w-3.5 h-3.5" />
         </button>
 
         {/* Value Display */}
@@ -95,9 +94,7 @@ export default function QuantityInput({
             ${disabled || isAtMax ? "opacity-30 cursor-not-allowed" : "hover:text-white hover:bg-zinc-800"}`}
           aria-label="Increase quantity"
         >
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
+          <PlusIcon className="w-3.5 h-3.5" />
         </button>
       </div>
 

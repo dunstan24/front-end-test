@@ -14,6 +14,7 @@
 import React, { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 import EmptyState from "@/components/ui/EmptyState";
+import { SearchIcon } from "@/components/ui/Icons";
 import { PRODUCTS, PRODUCT_CATEGORIES } from "@/features/purchase-request/data/products";
 import type { Product, ProductCategory } from "@/features/purchase-request/types";
 
@@ -77,15 +78,7 @@ export default function ProductCatalog({
         <div className="space-y-3">
           {/* Search Bar */}
           <div className="relative">
-            <svg
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none" />
             <input
               type="text"
               placeholder="Search products..."

@@ -10,6 +10,7 @@
 import React from "react";
 import CartItemComponent from "./CartItem";
 import EmptyState from "@/components/ui/EmptyState";
+import { CartIcon } from "@/components/ui/Icons";
 import type { CartItem } from "@/features/purchase-request/types";
 
 interface CartPanelProps {
@@ -51,9 +52,7 @@ export default function CartPanel({
       {/* Cart Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <svg className="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
-          </svg>
+          <CartIcon className="w-4 h-4 text-zinc-400" />
           Cart ({items.length} {items.length === 1 ? "item" : "items"})
         </h3>
         <button
