@@ -1,6 +1,6 @@
 {
-  "name": "browser-supply-clone",
-  "version": "0.1.0",
+  "name": "purchase-requests-frontend",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -1,111 +1,116 @@
-1. How would you structure JSON data for future scalability and maintainability?
+# Technical Test UI/UX & Frontend — Purchase Requests
 
-I'd keep it normalized instead of deeply nested — each section of the homepage (hero, features, testimonials, pricing, etc.) gets its own object with a stable id, rather than everything crammed into one giant blob. That way if two sections need to reference the same data (like a product used in both the hero and a comparison table), I just reference the id instead of duplicating the content. I'd also separate "content" from "config" — text/copy in one place, layout/display settings (like which sections are enabled, ordering, feature flags) in another. That split matters a lot here specifically because I built the first version off local JSON and I'm now wiring in a real API — since I kept the shape of the JSON close to what a REST/GraphQL response would look like (flat-ish, predictable keys, no weird one-off fields), swapping the data source didn't require touching the components at all, just the fetch layer.
-
-2. If you decide to create your own API, which technology/framework would you use and why?
-
-Since the whole project already lives in Next.js and deploys on Vercel, I went with Next.js API Routes (Route Handlers if I'm on the App Router) instead of spinning up a separate Express server somewhere. Main reason is simplicity — it ships in the same repo, deploys with the same vercel push, no extra hosting/CORS config, and I get serverless functions for free without managing infrastructure. If this were a bigger project that needed to serve multiple frontends or had heavier backend logic, I'd probably reach for something like Fastify or NestJS on its own service — but for a single-site project where the API's only job is to feed data to this frontend, keeping it inside Next.js is just less to maintain.
-
-3. How would you configure a custom domain (e.g. www.clientwebsite.com) to point to a Vercel deployment?
-
-In the Vercel dashboard, under the project's Settings → Domains, I'd add www.clientwebsite.com. Vercel then gives you the DNS records to add on the domain registrar's side — usually a CNAME record pointing www to cname.vercel-dns.com, and if the client also wants the bare domain (clientwebsite.com) to work, an A record pointing to Vercel's IP, or I'd just set up a redirect from the apex to the www version (or vice versa, depending on which one they want as canonical). Once DNS propagates, Vercel auto-provisions an SSL cert via Let's Encrypt, so HTTPS is handled without me touching anything manually.
-
-4. If the project needs an admin panel to manage content, what would you use?
-
-For something like this — a marketing/landing page where non-technical people need to edit text, images, and maybe reorder sections — I'd lean toward a headless CMS rather than building a custom admin panel from scratch. Something like Sanity or Contentful gives you a ready-made editing UI, image handling, and a content API out of the box, and it plugs straight into the Next.js frontend. If the client specifically wanted everything self-hosted and fully custom, the alternative would be a small admin app built with Next.js + Prisma + a database (Postgres/MongoDB), with auth handled through NextAuth — but that's a lot more to build and maintain just for content editing, so I'd only go that route if there were real requirements pushing me there (e.g. very custom workflows, no third-party data storage allowed).
-
-5. What techniques would you use to keep the site fast on slow connections?
-
-A few things I actually applied here: using next/image so images are automatically resized, lazy-loaded, and served in modern formats; code-splitting with dynamic imports so heavy components (like the quiz modal) don't get pulled into the initial bundle; trimming third-party scripts since those are often the biggest hit on slow networks; and relying on Vercel's edge caching/CDN so static assets are served from somewhere close to the user instead of a single origin. On top of that — preloading key fonts with font-display: swap so text doesn't stay invisible while fonts load, minimizing render-blocking CSS, and adding skeleton/placeholder states so the page feels responsive even while data is still coming in.
-
-6. If you implement a form, how would you securely send data to the backend?
-
-The form always posts to my own API route rather than calling any third-party service directly from the client, so nothing sensitive (API keys, secrets) is ever exposed in the browser. Everything's over HTTPS by default on Vercel. On the server side I re-validate and sanitize the input even though the frontend already validates it — client-side validation is just UX, never security. I'd add basic rate limiting on the endpoint to cut down on spam/bots, and for anything public-facing I'd throw in something like hCaptcha. Error responses stay generic (no leaking stack traces or internal details), and any secrets the API route needs (email service keys, etc.) live in Vercel's environment variables, not in the codebase.
-
-7. What strategies do you use to optimize images without sacrificing quality?
-
-next/image does most of the heavy lifting — automatic resizing per breakpoint, serving WebP/AVIF where the browser supports it, and lazy-loading anything below the fold. Beyond that, I make sure source images aren't wildly oversized for where they're actually displayed (no dropping a 4000px hero image into a 600px container), use SVG for icons/logos since they're resolution-independent and tiny, and keep compression around 75-80% quality, which is usually indistinguishable from the original but noticeably smaller. I'll also add a blur placeholder on larger images so the layout doesn't jump and the page feels like it's loading faster even before the full image arrives.
-
-## 🛠️ Tech Stack & Architecture
-
-- **Framework**: Next.js 14 (App Router, React 18, TypeScript)
-- **Backend Custom API**: Next.js Serverless Route Handlers (`/src/app/api/.../route.ts`)
-- **Single Source of Truth**: `/src/lib/data.ts` (Data fetcher layer yang melayani Server Components dan Route Handlers)
-- **Styling**: Tailwind CSS + Custom CSS Variables (Design Tokens extracted from browser.supply)
-- **Icons**: Lucide React
-- **Data Handling**: Modular Local JSON Data (`/src/data/*.json`)
-- **Animation & Transitions**: CSS GPU Acceleration Keyframes, Hover Micro-interactions, Auto-scrolling Marquee & Video Streams
-- **Deployment**: Vercel Serverless Production Ready
+Halaman aplikasi web internal **Purchase Requests** yang digunakan oleh koordinator/pemilik outlet cabang untuk memesan kebutuhan operasional langsung ke Head Office (seperti modul pembelajaran, perlengkapan kantor, peralatan, dan seragam).
 
 ---
 
-## 📄 API Documentation
+## 🔗 Links & Submissions
 
-Dokumentasi lengkap mengenai 12 endpoint Custom REST API yang tersedia dapat dibaca di file [API_DOCS.md](file:///c:/Users/USER/Desktop/Front%20end%20test/API_DOCS.md).
-
-### Ringkasan Endpoint API Utama:
-- `GET /api/templates?category=SaaS` — Daftar template unggulan (dengan filter kategori & search query)
-- `GET /api/testimonials?template=Aura` — Daftar ulasan testimoni pelanggan (dengan filter template)
-- `GET /api/hero` — Headline, CTA, rating & media hero section
-- `GET /api/pricing` — 3 tier harga & fasilitas lisensi
-- `GET /api/navigation` — Navigasi header & link sosial
-- `GET /api/features` — Fitur bento grid ("Why choose a template?")
-- `GET /api/how-it-works` — Galeri interaktif 3-step process
-- `GET /api/case-study` — Metrik & cerita sukses customer
-- `GET /api/quiz` — Pertanyaan kuis interaktif
-- `GET /api/creator` — Bio & 4 counter statistik pembuat
-- `GET /api/footer` — Link footer & copyright
+- **GitHub Repository**: [https://github.com/dunstan24/front-end-test](https://github.com/dunstan24/front-end-test)
+- **Figma Design Link**: *(Cantumkan link Figma UI/UX Design di sini)*
 
 ---
 
-## 📁 Struktur Folder Project
+## 🛠️ Teknologi yang Digunakan
+
+1. **Core Framework**: **Next.js 14** (App Router, React 18, TypeScript)
+   - Dipilih karena memberikan arsitektur modern berbasis komponen, type safety yang kuat, serta routing dan performa yang optimal.
+2. **Styling & Design System**: **Tailwind CSS 3.4** + Custom CSS Tokens
+   - Menggunakan Tailwind CSS untuk styling utilitas yang cepat, dipadukan dengan tema gelap premium (zinc/dark palette), font Inter, dan mikro-interaksi responsif.
+3. **State Management**: **Custom React Hook (`useCart`)**
+   - Logika bisnis keranjang (tambah/kurang produk, validasi stok, penghitungan PPN 11%, subtotal, grand total, pilihan pembayaran, dan simulasi submit) dikelola secara terpusat di `useCart.ts` agar terpisah dari komponen visual.
+4. **Icons & UI Primitives**: Inline SVG Components & Lucide Icons (zero external network dependency for core icons).
+
+---
+
+## 📁 Struktur Komponen & Fitur
+
+Struktur folder mengikuti pendekatan **Component-Based Architecture** dengan pemisahan tanggung jawab (*separation of concerns*) yang jelas:
 
 ```text
-c:/Users/USER/Desktop/Front end test/
-├── PROGRESS.md                # Progress tracker 21 Fase & Custom API Phase
-├── README.md                  # Dokumentasi & jawaban 7 pertanyaan teknis
-├── API_DOCS.md                # Dokumentasi lengkap 12 Custom REST API endpoints
-├── package.json               # Dependensi Next.js, Tailwind, Lucide Icons
-├── tailwind.config.ts         # Extended design tokens (colors, font, animations)
-├── postcss.config.mjs
-├── tsconfig.json
-├── next.config.mjs            # Image domain rules & React strict mode
-└── src/
-    ├── app/
-    │   ├── api/               # 12 Custom Serverless REST API Route Handlers
-    │   │   ├── navigation/route.ts
-    │   │   ├── hero/route.ts
-    │   │   ├── marquee-testimonials/route.ts
-    │   │   ├── templates/route.ts (filtering support)
-    │   │   ├── features/route.ts
-    │   │   ├── how-it-works/route.ts
-    │   │   ├── testimonials/route.ts (filtering support)
-    │   │   ├── case-study/route.ts
-    │   │   ├── pricing/route.ts
-    │   │   ├── quiz/route.ts
-    │   │   ├── creator/route.ts
-    │   │   └── footer/route.ts
-    │   ├── globals.css        # CSS variables, glassmorphic effects, keyframes
-    │   ├── layout.tsx         # Root layout + SEO Metadata
-    │   └── page.tsx           # Server Component merakit 12 section utama via /lib/data.ts
-    ├── components/
-    │   ├── layout/            # HeaderNav, Footer
-    │   └── sections/          # HeroSection, TestimonialsMarquee, FeaturedGrid,
-    │                          # WhyTemplates, HowItWorks, TestimonialsGrid,
-    │                          # CaseStudy, PricingSection, QuizCTA, AboutCreator
-    ├── lib/
-    │   └── data.ts            # Single Source of Truth Data Fetching Layer
-    └── data/                  # File JSON data per section (0 string hardcoded)
+src/
+├── app/
+│   ├── globals.css              # Global design tokens, scrollbar styling, utility classes
+│   ├── layout.tsx               # Root layout + SEO Metadata & Inter font subsetting
+│   └── page.tsx                 # Page entrypoint yang merakit PurchaseRequestPage
+├── components/
+│   ├── ui/                      # Base UI Primitives (Reusable, Presentation components)
+│   │   ├── Button.tsx           # Tombol reusable dengan state loading, disabled, & 4 varian
+│   │   ├── QuantityInput.tsx    # Kontrol +/- jumlah produk dengan validasi stok
+│   │   ├── Badge.tsx            # Badge status (In Stock, Low Stock, Out of Stock, In Cart)
+│   │   ├── EmptyState.tsx       # Tampilan ilustrasi & pesan saat keranjang/pencarian kosong
+│   │   ├── Icons.tsx            # SVG Icon components
+│   │   └── ScrollReveal.tsx     # IntersectionObserver reveal animation wrapper
+│   └── layout/                  # Layout Frame Components
+│       ├── Header.tsx           # Header navigasi sticky dengan indikator badge keranjang
+│       └── PageContainer.tsx    # Container pembungkus halaman (max-width 1200px)
+└── features/
+    └── purchase-request/        # Modul Fitur Utama Purchase Request
+        ├── types/index.ts       # TypeScript interfaces (Product, CartItem, Order, PaymentMethod)
+        ├── data/products.ts     # Data statis 12 produk, metode pembayaran, & riwayat pesanan
+        ├── hooks/useCart.ts     # Custom hook pengelola state keranjang & kalkulasi total
+        ├── components/
+        │   ├── ProductCard.tsx      # Kartu produk (gambar, harga, badge stok, tombol aksi)
+        │   ├── ProductCatalog.tsx   # Grid produk dengan bilah pencarian & filter kategori
+        │   ├── CartItem.tsx         # Baris item di keranjang dengan kontrol jumlah & hapus
+        │   ├── CartPanel.tsx        # Container daftar keranjang dengan empty state
+        │   ├── OrderSummary.tsx     # Ringkasan subtotal, PPN 11%, dan total biaya
+        │   └── PaymentMethod.tsx    # Pilihan radio group metode pembayaran
+        └── PurchaseRequestPage.tsx  # Halaman utama yang mengintegrasikan seluruh fitur
 ```
 
 ---
 
-## 🚀 Cara Menjalankan Project Secara Lokal
+## 💡 Keputusan UI/UX Utama
+
+1. **Layout 2-Kolom yang Efisien (Desktop & Mobile Responsive)**:
+   - **Kiri**: Katalog produk responsif (1 kolom pada mobile, 2 kolom pada tablet, 3 kolom pada desktop) dengan fitur pencarian live dan filter kategori.
+   - **Kanan**: Panel keranjang belanja sticky yang selalu terlihat saat pengguna melakukan *scroll*, mempermudah koordinator outlet memantau pesanan tanpa harus berpindah halaman.
+
+2. **Kejelasan Alur & Hirarki Visual**:
+   - Pengguna utama adalah koordinator/pemilik outlet dengan tingkat pemahaman teknologi yang beragam. Antarmuka dirancang bersih, langsung (*straightforward*), dan bebas dari elemen mengganggu.
+   - Tombol aksi utama (*Add to Cart* / *Submit*) menggunakan kontras tinggi dengan visual status yang sangat jelas.
+
+3. **Status Produk & Stok Terlihat Jelas**:
+   - **Produk Tersedia**: Indikator titik hijau + badge "In Stock".
+   - **Stok Menipis (1-3 pcs)**: Indikator titik amber + badge "Low Stock (jumlah)".
+   - **Stok Habis (0 pcs)**: Gambar produk ter-greyscale, badge merah "Out of Stock", dan tombol/input jumlah otomatis nonaktif (*disabled*).
+   - **Produk di Keranjang**: Kartu produk menampilkan border biru dan badge "In Cart (jumlah)".
+
+4. **Validasi & Proteksi Kesalahan Pengguna**:
+   - Input jumlah produk tidak bisa kurang dari 1 atau melebihi sisa stok yang tersedia. Pesan peringatan "Max stock reached" muncul otomatis jika jumlah mencapai batas stok.
+   - Tombol submit dinonaktifkan (*disabled*) jika keranjang kosong atau metode pembayaran belum dipilih, dilengkapi pesan petunjuk visual.
+   - Tombol submit menampilkan state *loading* (spinner) saat pengiriman disimulasikan untuk mencegah pengiriman berulang (*double submit*).
+
+5. **Aksesibilitas & Semantik HTML**:
+   - Menggunakan elemen HTML5 semantik (`<article>`, `<section>`, `<aside>`, `<header>`, `<footer>`).
+   - Tag ARIA (`role="radiogroup"`, `role="tab"`, `aria-label`, `aria-checked`) diterapkan untuk mendukung navigasi keyboard dan *screen reader*.
+
+---
+
+## 📌 Asumsi yang Dibuat Selama Pengerjaan
+
+1. **Pengguna Target**: Koordinator atau owner cabang outlet yang membutuhkan alat pemesanan cepat, akurat, dan dapat diakses baik dari laptop maupun smartphone.
+2. **Pajak & Biaya**: Diaplikasikan pajak PPN 11% sesuai standar operasional usaha di Indonesia.
+3. **Mata Uang**: Menggunakan format Rupiah (IDR) terstandarisasi via `Intl.NumberFormat("id-ID")`.
+4. **Kategori Produk**: 12 sampel produk dikelompokkan ke dalam 4 kategori operasional utama: **Modules** (modul belajar), **Stationery** (alat tulis), **Equipment** (peralatan), dan **Uniforms** (seragam & identitas staf).
+5. **Metode Pembayaran**: Disediakan 3 pilihan pembayaran internal cabang: **Bank Transfer**, **Cash on Delivery (COD)**, dan **Company Credit** (potongan alokasi kredit bulanan cabang).
+6. **Simulasi Backend**: Proses pengiriman pesanan disimulasikan dengan *delay* 2 detik untuk memberikan umpan balik *real-time* kepada pengguna sebelum menampilkan layar sukses.
+
+---
+
+## 🚀 Petunjuk Menjalankan Project
+
+### Prasyarat
+- **Node.js**: versi `18.x` atau lebih baru
+- **npm** / **yarn** / **pnpm**
+
+### Langkah-langkah Running:
 
 1. **Clone repository ini**:
    ```bash
-   git clone https://github.com/dunstan24/browser-supply-clone.git
-   cd "Front end test"
+   git clone https://github.com/dunstan24/front-end-test.git
+   cd "front-end-test"
    ```
 
 2. **Install dependensi**:
@@ -117,16 +122,24 @@ c:/Users/USER/Desktop/Front end test/
    ```bash
    npm run dev
    ```
-   Buka `http://localhost:3000` di browser Anda.
+   Buka `http://localhost:3000` pada browser Anda.
 
-4. **Uji coba Endpoint REST API**:
-   - `http://localhost:3000/api/templates`
-   - `http://localhost:3000/api/templates?category=SaaS`
-   - `http://localhost:3000/api/testimonials`
-
-5. **Build untuk produksi**:
+4. **Build untuk produksi**:
    ```bash
    npm run build
    npm run start
    ```
 
+---
+
+## 🎯 Interaksi Minimum yang Didukung
+
+- ✅ Menambah dan mengurangi jumlah produk (dengan batas stok).
+- ✅ Menambahkan produk ke keranjang & mengubah jumlah langsung dari kartu produk.
+- ✅ Menghapus produk dari keranjang.
+- ✅ Memperbarui subtotal, PPN 11%, dan total biaya secara otomatis.
+- ✅ Memilih metode pembayaran.
+- ✅ Menampilkan keadaan keranjang kosong (*empty state*).
+- ✅ Menampilkan peringatan & validasi ketika jumlah melebihi stok.
+- ✅ Menampilkan simulasi proses submit dengan state loading & disabled.
+- ✅ Menampilkan riwayat pesanan (*order history*) yang dapat di-expand/collapse.

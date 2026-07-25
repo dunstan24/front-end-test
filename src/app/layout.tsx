@@ -14,15 +14,14 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Premium Framer Website Templates for Business | Browser.supply",
+  title: "Purchase Request — OrderHub",
   description:
-    "Professional Framer website templates starting at $129. Trusted by 2,000+ customers. Launch your business site in hours with step by step video tutorials. No coding required.",
+    "Internal purchase request system for branch outlets to order operational supplies from Head Office. Select products, manage quantities, choose payment methods, and submit orders.",
   openGraph: {
-    title: "Premium Framer Website Templates for Business | Browser.supply",
+    title: "Purchase Request — OrderHub",
     description:
-      "Professional Framer website templates starting at $129. Trusted by 2,000+ customers.",
+      "Internal ordering system for outlet branches to request operational supplies.",
     type: "website",
-    url: "https://browser.supply/",
   },
 };
 
@@ -34,13 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <head>
-        {/* DNS preconnect for external resources — saves 100-300ms per domain */}
+        {/* DNS preconnect for external image resources */}
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
-        <link rel="preconnect" href="https://vjs.zencdn.net" />
-        <link rel="dns-prefetch" href="https://vjs.zencdn.net" />
-        <link rel="preconnect" href="https://interactive-examples.mdn.mozilla.net" />
-        <link rel="dns-prefetch" href="https://interactive-examples.mdn.mozilla.net" />
       </head>
       <body>{children}</body>
     </html>
