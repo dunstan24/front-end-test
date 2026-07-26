@@ -7,11 +7,13 @@
  *
  * State managed centrally via useCart hook and passed down via props.
  * Uses centralized icon components from @/components/ui/Icons.
+ *
+ * Order history is live — updates immediately after each successful submit.
  */
 
 "use client";
 
-import React, { useRef, useCallback, useState } from "react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import PageContainer from "@/components/layout/PageContainer";
 import ProductCatalog from "./components/ProductCatalog";
@@ -26,28 +28,52 @@ import {
   CheckIcon,
   ChevronDownIcon,
   PackageIcon,
+  OrderHistoryIcon,
 } from "@/components/ui/Icons";
 import { useCart } from "./hooks/useCart";
-import { formatPrice, ORDER_HISTORY } from "./data/products";
+import { formatPrice } from "./data/products";
 import type { Product } from "./types";
 
 /** Maps order status to Badge variant */
 function getStatusVariant(status: string) {
   if (status === "completed") return "success";
-  if (status === "shipped") return "info";
+  if (status === "shipped")   return "info";
   if (status === "processing") return "warning";
   return "neutral";
 }
 
-export default function PurchaseRequestPage() {
-  const cart = useCart();
-  const cartRef = useRef<HTMLDivElement>(null);
-  const catalogRef = useRef<HTMLDivElement>(null);
-  const [showHistory, setShowHistory] = useState(false);
-  const [orderNotes, setOrderNotes] = useState("");
-  const [toast, setToast] = useState({ visible: false, message: "" });
+/** Format a date string for display */
+function formatDate(dateStr: string, style: "short" | "long" = "short") {
+  return new Date(dateStr).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: style === "long" ? "long" : "short",
+    year: "numeric",
+  });
+}
 
-  /** Wraps addToCart to show a toast notification */
+export default function PurchaseRequestPage() {
+  const cart        = useCart();
+  const cartRef     = useRef<HTMLDivElement>(null);
+  const catalogRef  = useRef<HTMLDivElement>(null);
+  const historyRef  = useRef<HTMLElement>(null);
+
+  const [showHistory, setShowHistory] = useState(false);
+  const [orderNotes,  setOrderNotes]  = useState("");
+  const [toast,       setToast]       = useState({ visible: false, message: "" });
+
+  /** After a successful submit: auto-open history and scroll to it */
+  useEffect(() => {
+    if (cart.isSubmitted) {
+      setShowHistory(true);
+      // Small delay so the success banner renders first
+      const t = setTimeout(() => {
+        historyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 400);
+      return () => clearTimeout(t);
+    }
+  }, [cart.isSubmitted]);
+
+  /** Wraps addToCart to also show a toast notification */
   const handleAddToCart = useCallback((product: Product, quantity: number) => {
     cart.addToCart(product, quantity);
     setToast({ visible: true, message: `${product.name} added to cart` });
@@ -77,20 +103,31 @@ export default function PurchaseRequestPage() {
       <main className="pt-20 pb-16">
         <PageContainer>
 
-          {/* ── Success State ── */}
-          {cart.isSubmitted && (
-            <div className="mb-8 rounded-2xl border border-emerald-800/50 bg-emerald-950/30 p-6 text-center space-y-4">
+          {/* ── Success Banner ── */}
+          {cart.isSubmitted && cart.lastOrder && (
+            <div className="mb-8 rounded-2xl border border-emerald-800/50 bg-emerald-950/30 p-6 text-center space-y-4 animate-fade-in">
               <div className="w-14 h-14 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto">
                 <CheckIcon className="w-7 h-7" />
               </div>
+
               <div className="space-y-1.5">
                 <h2 className="text-xl font-extrabold text-white">
                   Purchase Request Submitted!
                 </h2>
+                {/* Show the actual order ID from the new history entry */}
                 <p className="text-xs text-zinc-400 leading-relaxed max-w-sm mx-auto">
-                  Your order has been sent to Head Office for processing. You will receive a confirmation shortly.
+                  Order{" "}
+                  <span className="font-mono font-bold text-emerald-400">
+                    {cart.lastOrder.id}
+                  </span>{" "}
+                  has been sent to Head Office. Status:{" "}
+                  <Badge variant="warning" dot>processing</Badge>
+                </p>
+                <p className="text-[11px] text-zinc-600 mt-1">
+                  Scroll down to see your updated order history ↓
                 </p>
               </div>
+
               <Button variant="primary" size="md" onClick={cart.resetOrder}>
                 Place New Order
               </Button>
@@ -101,7 +138,7 @@ export default function PurchaseRequestPage() {
           {!cart.isSubmitted && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
 
-              {/* Left Column — Product Catalog */}
+              {/* Left — Product Catalog */}
               <div className="lg:col-span-7 xl:col-span-8" ref={catalogRef}>
                 <ProductCatalog
                   isInCart={cart.isInCart}
@@ -111,13 +148,13 @@ export default function PurchaseRequestPage() {
                 />
               </div>
 
-              {/* Right Column — Cart + Summary + Notes + Payment + Submit */}
+              {/* Right — Cart + Summary + Payment + Notes + Submit */}
               <aside
                 className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-20 space-y-4"
                 ref={cartRef}
                 aria-label="Cart and order details"
               >
-                {/* Cart Panel */}
+                {/* Cart */}
                 <div className="rounded-2xl border border-zinc-800/80 bg-[#050507] p-4">
                   <CartPanel
                     items={cart.cartItems}
@@ -137,7 +174,7 @@ export default function PurchaseRequestPage() {
                   itemCount={cart.itemCount}
                 />
 
-                {/* Payment Method + Notes — only shown when cart has items */}
+                {/* Payment + Notes + Submit — visible only when cart has items */}
                 {cart.itemCount > 0 && (
                   <>
                     {/* Payment Method */}
@@ -149,7 +186,7 @@ export default function PurchaseRequestPage() {
                       />
                     </div>
 
-                    {/* Order Notes (uses the Input/Textarea component) */}
+                    {/* Order Notes */}
                     <div className="rounded-2xl border border-zinc-800/80 bg-[#050507] p-4 space-y-3">
                       <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
                         Order Notes
@@ -194,8 +231,9 @@ export default function PurchaseRequestPage() {
           )}
 
           {/* ── Order History Section ── */}
-          <section className="mt-16" aria-label="Order History">
-            {/* Toggle Button */}
+          <section className="mt-16" aria-label="Order History" ref={historyRef}>
+
+            {/* Toggle Header */}
             <button
               onClick={() => setShowHistory(!showHistory)}
               className="flex items-center gap-3 mb-6 group"
@@ -203,8 +241,13 @@ export default function PurchaseRequestPage() {
               aria-controls="order-history-panel"
               id="order-history-toggle"
             >
-              <span className="inline-block px-3 py-1 rounded-full bg-blue-950/60 border border-blue-800/40 text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-800/40 text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+                <OrderHistoryIcon className="w-3.5 h-3.5" />
                 Order History
+                {/* Count badge */}
+                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-blue-800/40 text-[10px] font-bold text-blue-300">
+                  {cart.orderHistory.length}
+                </span>
               </span>
               <ChevronDownIcon
                 className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${
@@ -217,78 +260,114 @@ export default function PurchaseRequestPage() {
             {showHistory && (
               <div
                 id="order-history-panel"
-                className="rounded-2xl border border-zinc-800/80 bg-[#050507] overflow-hidden"
+                className="rounded-2xl border border-zinc-800/80 bg-[#050507] overflow-hidden animate-fade-in"
               >
-                {/* Desktop Table */}
-                <div className="hidden sm:block overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-zinc-800/80">
-                        {["Order ID", "Date", "Items", "Total", "Payment", "Status"].map((h) => (
-                          <th key={h} className="px-5 py-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-zinc-800/60">
-                      {ORDER_HISTORY.map((order) => (
-                        <tr key={order.id} className="hover:bg-zinc-900/50 transition-colors">
-                          <td className="px-5 py-3.5 font-mono font-semibold text-white">{order.id}</td>
-                          <td className="px-5 py-3.5 text-zinc-400">
-                            {new Date(order.date).toLocaleDateString("id-ID", {
-                              day: "numeric", month: "short", year: "numeric",
-                            })}
-                          </td>
-                          <td className="px-5 py-3.5 text-zinc-400 max-w-[220px]">
-                            <span className="line-clamp-2">
-                              {order.items.map((item) => `${item.product.name} (×${item.quantity})`).join(", ")}
-                            </span>
-                          </td>
-                          <td className="px-5 py-3.5 font-semibold text-white tabular-nums">
-                            {formatPrice(order.total)}
-                          </td>
-                          <td className="px-5 py-3.5 text-zinc-400 capitalize">
-                            {order.paymentMethod.replace(/_/g, " ")}
-                          </td>
-                          <td className="px-5 py-3.5">
-                            <Badge variant={getStatusVariant(order.status)} dot>
-                              {order.status}
-                            </Badge>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Mobile Cards */}
-                <div className="sm:hidden divide-y divide-zinc-800/60">
-                  {ORDER_HISTORY.map((order) => (
-                    <div key={order.id} className="p-4 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs font-semibold text-white">{order.id}</span>
-                        <Badge variant={getStatusVariant(order.status)} dot>
-                          {order.status}
-                        </Badge>
-                      </div>
-                      <div className="text-[10px] text-zinc-500">
-                        {new Date(order.date).toLocaleDateString("id-ID", {
-                          day: "numeric", month: "long", year: "numeric",
-                        })}
-                      </div>
-                      <div className="text-xs text-zinc-400">
-                        {order.items.map((item) => `${item.product.name} (×${item.quantity})`).join(", ")}
-                      </div>
-                      <div className="flex items-center justify-between pt-1">
-                        <span className="text-xs font-bold text-white">{formatPrice(order.total)}</span>
-                        <span className="text-[10px] text-zinc-500 capitalize">
-                          {order.paymentMethod.replace(/_/g, " ")}
-                        </span>
-                      </div>
+                {cart.orderHistory.length === 0 ? (
+                  <div className="py-12 text-center text-zinc-600 text-sm">
+                    No orders yet. Place your first order above.
+                  </div>
+                ) : (
+                  <>
+                    {/* Desktop Table */}
+                    <div className="hidden sm:block overflow-x-auto">
+                      <table className="w-full text-left text-xs">
+                        <thead>
+                          <tr className="border-b border-zinc-800/80">
+                            {["Order ID", "Date", "Items", "Total", "Payment", "Status"].map((h) => (
+                              <th key={h} className="px-5 py-3 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                {h}
+                              </th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-800/60">
+                          {cart.orderHistory.map((order, idx) => {
+                            const isNew = cart.lastOrder?.id === order.id;
+                            return (
+                              <tr
+                                key={order.id}
+                                className={`transition-colors ${
+                                  isNew
+                                    ? "bg-emerald-950/20 border-l-2 border-l-emerald-600"
+                                    : "hover:bg-zinc-900/50"
+                                }`}
+                              >
+                                <td className="px-5 py-3.5 font-mono font-semibold text-white">
+                                  <span className="flex items-center gap-1.5">
+                                    {order.id}
+                                    {isNew && (
+                                      <span className="px-1.5 py-0.5 rounded-md bg-emerald-600/20 border border-emerald-500/30 text-[9px] font-bold text-emerald-400 uppercase tracking-wide animate-fade-in">
+                                        New
+                                      </span>
+                                    )}
+                                  </span>
+                                </td>
+                                <td className="px-5 py-3.5 text-zinc-400">
+                                  {formatDate(order.date)}
+                                </td>
+                                <td className="px-5 py-3.5 text-zinc-400 max-w-[220px]">
+                                  <span className="line-clamp-2">
+                                    {order.items.map((item) => `${item.product.name} (×${item.quantity})`).join(", ")}
+                                  </span>
+                                </td>
+                                <td className="px-5 py-3.5 font-semibold text-white tabular-nums">
+                                  {formatPrice(order.total)}
+                                </td>
+                                <td className="px-5 py-3.5 text-zinc-400 capitalize">
+                                  {order.paymentMethod.replace(/_/g, " ")}
+                                </td>
+                                <td className="px-5 py-3.5">
+                                  <Badge variant={getStatusVariant(order.status)} dot>
+                                    {order.status}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
-                  ))}
-                </div>
+
+                    {/* Mobile Cards */}
+                    <div className="sm:hidden divide-y divide-zinc-800/60">
+                      {cart.orderHistory.map((order) => {
+                        const isNew = cart.lastOrder?.id === order.id;
+                        return (
+                          <div
+                            key={order.id}
+                            className={`p-4 space-y-2 ${isNew ? "bg-emerald-950/20 border-l-2 border-l-emerald-600" : ""}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="flex items-center gap-1.5 font-mono text-xs font-semibold text-white">
+                                {order.id}
+                                {isNew && (
+                                  <span className="px-1.5 py-0.5 rounded-md bg-emerald-600/20 border border-emerald-500/30 text-[9px] font-bold text-emerald-400 uppercase">
+                                    New
+                                  </span>
+                                )}
+                              </span>
+                              <Badge variant={getStatusVariant(order.status)} dot>
+                                {order.status}
+                              </Badge>
+                            </div>
+                            <div className="text-[10px] text-zinc-500">
+                              {formatDate(order.date, "long")}
+                            </div>
+                            <div className="text-xs text-zinc-400">
+                              {order.items.map((item) => `${item.product.name} (×${item.quantity})`).join(", ")}
+                            </div>
+                            <div className="flex items-center justify-between pt-1">
+                              <span className="text-xs font-bold text-white">{formatPrice(order.total)}</span>
+                              <span className="text-[10px] text-zinc-500 capitalize">
+                                {order.paymentMethod.replace(/_/g, " ")}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </section>
