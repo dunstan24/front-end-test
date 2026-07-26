@@ -101,10 +101,10 @@ src/
 
 1. **Target Users**: Outlet branch coordinators or owners requiring a fast, clear ordering tool accessible on desktop and mobile.
 2. **Taxation**: Standard 11% VAT (PPN) applied to all orders according to Indonesian business regulations.
-3. **Currency**: Formatted in Indonesian Rupiah (IDR) using standard `Intl.NumberFormat("id-ID")`.
-4. **Product Selection**: 12 mock products categorized into 4 operational areas: **Modules**, **Stationery**, **Equipment**, and **Uniforms**.
-5. **Payment Methods**: 3 internal branch payment options: **Bank Transfer**, **Cash on Delivery (COD)**, and **Company Credit**.
-6. **Backend Simulation**: 2-second delay during submit simulation to provide realistic async feedback before showing success states.
+3. **Currency & Formatting**: Formatted in Indonesian Rupiah (IDR) using standard `Intl.NumberFormat("id-ID")`.
+4. **Stock Deduction Timing**: Stock is deducted upon order confirmation (submission) rather than initial cart addition, reflecting standard procurement reservation workflows.
+5. **Product Selection & Mock Data**: 12 mock products categorized into 4 operational areas (Modules, Stationery, Equipment, Uniforms). Some items initially feature low or zero stock to showcase edge-case UI states.
+6. **Backend & Persistence Simulation**: `localStorage` is used to persist cart items, live stock levels, and order history across browser reloads.
 
 ---
 
