@@ -16,11 +16,20 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import type { CartItem, Product, PaymentMethodType, Order } from "../types";
-import { ORDER_HISTORY as SEED_HISTORY } from "../data/products";
+import { ORDER_HISTORY as SEED_HISTORY, PRODUCTS } from "../data/products";
 
 const TAX_RATE = 0.11; // PPN 11%
 const CART_STORAGE_KEY    = "orderhub_cart_v1";
 const HISTORY_STORAGE_KEY = "orderhub_history_v1";
+const STOCK_STORAGE_KEY   = "orderhub_stock_v1";
+
+/** productId → current live stock */
+type StockMap = Record<string, number>;
+
+/** Build initial stock map from static product list */
+function buildDefaultStockMap(): StockMap {
+  return Object.fromEntries(PRODUCTS.map((p) => [p.id, p.stock]));
+}
 
 /** Generate a sequential order ID based on existing history length */
 function generateOrderId(existingCount: number): string {
@@ -57,6 +66,8 @@ export interface UseCartReturn {
   lastOrder: Order | null;
   /** Full order history (newest first) */
   orderHistory: Order[];
+  /** Get the current live stock for a product (decreases after purchases) */
+  getLiveStock: (productId: string) => number;
   /** Add a product to cart (or increase quantity if already in cart) */
   addToCart: (product: Product, quantity?: number) => void;
   /** Remove a product from cart entirely */
@@ -91,16 +102,17 @@ export interface UseCartReturn {
 
 export function useCart(): UseCartReturn {
   // ── Cart state ──────────────────────────────────────────────────────────
-  // Always init with [] (SSR-safe). Load from localStorage in useEffect.
   const [cartItems,     setCartItems]     = useState<CartItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType | null>(null);
   const [isSubmitting,  setIsSubmitting]  = useState(false);
   const [isSubmitted,   setIsSubmitted]   = useState(false);
   const [lastOrder,     setLastOrder]     = useState<Order | null>(null);
-
+  
   // ── Order history state ─────────────────────────────────────────────────
-  // Seed with static mock data on first ever load; persisted thereafter.
   const [orderHistory, setOrderHistory] = useState<Order[]>([]);
+
+  // ── Stock state ─────────────────────────────────────────────────────────
+  const [stockMap, setStockMap] = useState<StockMap>({});
 
   // ── Hydration: load from localStorage after first paint ─────────────────
   useEffect(() => {
@@ -111,15 +123,22 @@ export function useCart(): UseCartReturn {
     );
     if (storedCart.length > 0) setCartItems(storedCart);
 
-    // Order history — use stored version if it exists, otherwise seed from mock
+    // Order history
     const storedHistory = safeJsonParse<Order[]>(
       localStorage.getItem(HISTORY_STORAGE_KEY),
       []
     );
     setOrderHistory(storedHistory.length > 0 ? storedHistory : SEED_HISTORY);
+
+    // Stock map
+    const storedStock = safeJsonParse<StockMap>(
+      localStorage.getItem(STOCK_STORAGE_KEY),
+      {}
+    );
+    setStockMap(Object.keys(storedStock).length > 0 ? storedStock : buildDefaultStockMap());
   }, []);
 
-  // ── Persist cart on change ───────────────────────────────────────────────
+  // ── Persist state on change ─────────────────────────────────────────────
   useEffect(() => {
     if (cartItems.length > 0) {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
@@ -128,45 +147,58 @@ export function useCart(): UseCartReturn {
     }
   }, [cartItems]);
 
-  // ── Persist order history on change ─────────────────────────────────────
   useEffect(() => {
     if (orderHistory.length > 0) {
       localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(orderHistory));
     }
   }, [orderHistory]);
 
+  useEffect(() => {
+    if (Object.keys(stockMap).length > 0) {
+      localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(stockMap));
+    }
+  }, [stockMap]);
+
+  /** Returns the current live stock for a product */
+  const getLiveStock = useCallback(
+    (productId: string): number => stockMap[productId] ?? 0,
+    [stockMap]
+  );
+
   // ── Cart operations ──────────────────────────────────────────────────────
 
   const addToCart = useCallback((product: Product, quantity: number = 1) => {
-    if (product.stock <= 0) return;
+    const liveStock = stockMap[product.id] ?? product.stock;
+    if (liveStock <= 0) return;
     setCartItems((prev) => {
       const idx = prev.findIndex((item) => item.product.id === product.id);
       if (idx >= 0) {
         const updated = [...prev];
         updated[idx] = {
           ...updated[idx],
-          quantity: Math.min(updated[idx].quantity + quantity, product.stock),
+          quantity: Math.min(updated[idx].quantity + quantity, liveStock),
         };
         return updated;
       }
-      return [...prev, { product, quantity: Math.min(Math.max(1, quantity), product.stock) }];
+      return [...prev, { product, quantity: Math.min(Math.max(1, quantity), liveStock) }];
     });
-  }, []);
+  }, [stockMap]);
 
   const removeFromCart = useCallback((productId: string) => {
     setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
   }, []);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
+    const liveStock = stockMap[productId] ?? Infinity;
     setCartItems((prev) => {
       if (quantity <= 0) return prev.filter((item) => item.product.id !== productId);
       return prev.map((item) =>
         item.product.id !== productId
           ? item
-          : { ...item, quantity: Math.min(quantity, item.product.stock) }
+          : { ...item, quantity: Math.min(quantity, liveStock) }
       );
     });
-  }, []);
+  }, [stockMap]);
 
   const clearCart = useCallback(() => setCartItems([]), []);
 
@@ -185,21 +217,27 @@ export function useCart(): UseCartReturn {
   const submitOrder = useCallback(async () => {
     if (!paymentMethod) return;
 
-    // Capture current cart/total before clearing
     const snapshot = [...cartItems];
     const orderTotal = snapshot.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
-      0
+      (sum, item) => sum + item.product.price * item.quantity, 0
     );
     const tax = Math.round(orderTotal * TAX_RATE);
 
     setIsSubmitting(true);
-    // Simulate API network delay
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Build the new order object
+    // Reduce live stock for each purchased product
+    setStockMap((prev) => {
+      const updated = { ...prev };
+      for (const item of snapshot) {
+        const current = updated[item.product.id] ?? item.product.stock;
+        updated[item.product.id] = Math.max(0, current - item.quantity);
+      }
+      return updated;
+    });
+
     const newOrder: Order = {
-      id: generateOrderId(0), // will be corrected below with real count
+      id: "TEMP",
       date: todayIso(),
       items: snapshot,
       total: orderTotal + tax,
@@ -207,12 +245,8 @@ export function useCart(): UseCartReturn {
       status: "processing",
     };
 
-    // Prepend to history (newest first) and assign a proper sequential ID
     setOrderHistory((prev) => {
-      const correctedOrder: Order = {
-        ...newOrder,
-        id: generateOrderId(prev.length),
-      };
+      const correctedOrder: Order = { ...newOrder, id: generateOrderId(prev.length) };
       setLastOrder(correctedOrder);
       return [correctedOrder, ...prev];
     });
@@ -251,6 +285,7 @@ export function useCart(): UseCartReturn {
     isSubmitted,
     lastOrder,
     orderHistory,
+    getLiveStock,
     addToCart,
     removeFromCart,
     updateQuantity,

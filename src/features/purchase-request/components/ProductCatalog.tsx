@@ -19,14 +19,12 @@ import { PRODUCTS, PRODUCT_CATEGORIES } from "@/features/purchase-request/data/p
 import type { Product, ProductCategory } from "@/features/purchase-request/types";
 
 interface ProductCatalogProps {
-  /** Check if product is in cart */
   isInCart: (productId: string) => boolean;
-  /** Get cart quantity for product */
   getCartQuantity: (productId: string) => number;
-  /** Add product to cart */
   onAddToCart: (product: Product, quantity: number) => void;
-  /** Update quantity in cart */
   onUpdateQuantity: (productId: string, quantity: number) => void;
+  /** Returns live (post-purchase) stock for a product */
+  getLiveStock: (productId: string) => number;
 }
 
 export default function ProductCatalog({
@@ -34,6 +32,7 @@ export default function ProductCatalog({
   getCartQuantity,
   onAddToCart,
   onUpdateQuantity,
+  getLiveStock,
 }: ProductCatalogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<ProductCategory>("all");
@@ -129,6 +128,7 @@ export default function ProductCatalog({
               product={product}
               isInCart={isInCart(product.id)}
               cartQuantity={getCartQuantity(product.id)}
+              liveStock={getLiveStock(product.id)}
               onAddToCart={onAddToCart}
               onUpdateQuantity={onUpdateQuantity}
             />

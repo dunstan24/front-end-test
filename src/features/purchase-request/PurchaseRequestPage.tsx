@@ -145,6 +145,7 @@ export default function PurchaseRequestPage() {
                   getCartQuantity={cart.getCartQuantity}
                   onAddToCart={handleAddToCart}
                   onUpdateQuantity={cart.updateQuantity}
+                  getLiveStock={cart.getLiveStock}
                 />
               </div>
 

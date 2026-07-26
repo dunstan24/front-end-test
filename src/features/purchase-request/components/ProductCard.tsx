@@ -5,8 +5,11 @@
  * States:
  * - Available: Shows quantity input + "Add to Cart" button
  * - In Cart: Shows "Added ✓" with quantity adjustment
- * - Out of Stock: Grayed out with "Out of Stock" badge, disabled controls
- * - Low Stock: Shows warning badge
+ * - Out of Stock: Grayed out, image grayscale, disabled controls
+ * - Low Stock (≤3): Amber warning badge with remaining count
+ *
+ * Uses liveStock (from useCart stockMap) instead of product.stock so that
+ * stock values update immediately after a successful purchase.
  */
 
 "use client";
@@ -22,26 +25,29 @@ import { formatPrice } from "@/features/purchase-request/data/products";
 
 interface ProductCardProps {
   product: Product;
+  /** Current live stock (post-purchase, from useCart stockMap) */
+  liveStock: number;
   /** Whether this product is already in the cart */
   isInCart: boolean;
   /** Current quantity in cart (0 if not in cart) */
   cartQuantity: number;
-  /** Add to cart handler */
   onAddToCart: (product: Product, quantity: number) => void;
-  /** Update quantity handler (for when already in cart) */
   onUpdateQuantity: (productId: string, quantity: number) => void;
 }
 
 export default function ProductCard({
   product,
+  liveStock,
   isInCart,
   cartQuantity,
   onAddToCart,
   onUpdateQuantity,
 }: ProductCardProps) {
   const [localQty, setLocalQty] = useState(1);
-  const isOutOfStock = product.stock === 0;
-  const isLowStock = product.stock > 0 && product.stock <= 3;
+
+  // Use liveStock for all stock checks — updates after every purchase
+  const isOutOfStock = liveStock === 0;
+  const isLowStock   = liveStock > 0 && liveStock <= 3;
 
   const handleAddToCart = () => {
     if (!isOutOfStock) {
@@ -52,7 +58,7 @@ export default function ProductCard({
 
   const getStockBadge = () => {
     if (isOutOfStock) return <Badge variant="danger">Out of Stock</Badge>;
-    if (isLowStock) return <Badge variant="warning" dot>Low Stock ({product.stock})</Badge>;
+    if (isLowStock)   return <Badge variant="warning" dot>Low Stock ({liveStock})</Badge>;
     return <Badge variant="success" dot>In Stock</Badge>;
   };
 
@@ -105,7 +111,7 @@ export default function ProductCard({
 
       {/* Product Details */}
       <div className="p-4 flex flex-col flex-1 space-y-3">
-        {/* Name + Price */}
+        {/* Name + Description */}
         <div className="space-y-1">
           <h3 className="text-sm font-bold text-white leading-snug line-clamp-2 group-hover:text-zinc-200 transition-colors">
             {product.name}
@@ -125,7 +131,14 @@ export default function ProductCard({
           </span>
         </div>
 
-        {/* Spacer to push controls to bottom */}
+        {/* Stock count display (when not out of stock) */}
+        {!isOutOfStock && (
+          <p className="text-[10px] text-zinc-600 font-medium">
+            {liveStock} unit{liveStock !== 1 ? "s" : ""} available
+          </p>
+        )}
+
+        {/* Spacer */}
         <div className="flex-1" />
 
         {/* Controls */}
@@ -135,7 +148,7 @@ export default function ProductCard({
             <div className="flex items-center justify-between gap-3">
               <QuantityInput
                 value={cartQuantity}
-                max={product.stock}
+                max={liveStock}          // capped at live stock, not static product.stock
                 onChange={(qty) => onUpdateQuantity(product.id, qty)}
                 compact
               />
@@ -144,12 +157,12 @@ export default function ProductCard({
               </span>
             </div>
           ) : (
-            /* Not in cart — show quantity selector + add button */
+            /* Not in cart — quantity selector + add button */
             <>
               {!isOutOfStock && (
                 <QuantityInput
                   value={localQty}
-                  max={product.stock}
+                  max={liveStock}        // capped at live stock
                   onChange={setLocalQty}
                   disabled={isOutOfStock}
                   compact
