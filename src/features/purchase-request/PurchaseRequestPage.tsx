@@ -83,6 +83,12 @@ export default function PurchaseRequestPage() {
     setToast((prev) => ({ ...prev, visible: false }));
   }, []);
 
+  /** Reset demo stock and order history data with feedback */
+  const handleResetDemo = useCallback(() => {
+    cart.resetDemoData();
+    setToast({ visible: true, message: "Demo stock & order history reset successfully!" });
+  }, [cart]);
+
   const scrollToCart = useCallback(() => {
     cartRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
@@ -234,28 +240,45 @@ export default function PurchaseRequestPage() {
           {/* ── Order History Section ── */}
           <section className="mt-16" aria-label="Order History" ref={historyRef}>
 
-            {/* Toggle Header */}
-            <button
-              onClick={() => setShowHistory(!showHistory)}
-              className="flex items-center gap-3 mb-6 group"
-              aria-expanded={showHistory}
-              aria-controls="order-history-panel"
-              id="order-history-toggle"
-            >
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-800/40 text-[11px] font-bold text-blue-400 uppercase tracking-wider">
-                <OrderHistoryIcon className="w-3.5 h-3.5" />
-                Order History
-                {/* Count badge */}
-                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-blue-800/40 text-[10px] font-bold text-blue-300">
-                  {cart.orderHistory.length}
+            {/* Header + Demo Reset Action */}
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="flex items-center gap-3 group"
+                aria-expanded={showHistory}
+                aria-controls="order-history-panel"
+                id="order-history-toggle"
+              >
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-800/40 text-[11px] font-bold text-blue-400 uppercase tracking-wider">
+                  <OrderHistoryIcon className="w-3.5 h-3.5" />
+                  Order History
+                  {/* Count badge */}
+                  <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-blue-800/40 text-[10px] font-bold text-blue-300">
+                    {cart.orderHistory.length}
+                  </span>
                 </span>
-              </span>
-              <ChevronDownIcon
-                className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${
-                  showHistory ? "rotate-180" : ""
-                }`}
-              />
-            </button>
+                <ChevronDownIcon
+                  className={`w-4 h-4 text-zinc-500 transition-transform duration-200 ${
+                    showHistory ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Demo Reset Button */}
+              <div className="flex items-center gap-2.5">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleResetDemo}
+                  className="text-xs text-zinc-300 hover:text-white border-zinc-800 hover:border-zinc-700"
+                >
+                  Reset Stock & Order History
+                </Button>
+                <span className="text-[11px] text-zinc-500 font-medium italic">
+                  *This button is for demo only
+                </span>
+              </div>
+            </div>
 
             {/* History Panel */}
             {showHistory && (

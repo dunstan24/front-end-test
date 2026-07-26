@@ -86,6 +86,8 @@ export interface UseCartReturn {
   submitOrder: () => Promise<void>;
   /** Reset submitted state to place new order */
   resetOrder: () => void;
+  /** Reset all stock and order history data back to initial demo state */
+  resetDemoData: () => void;
   /** Cart subtotal (before tax) */
   subtotal: number;
   /** Tax amount (PPN 11%) */
@@ -263,6 +265,21 @@ export function useCart(): UseCartReturn {
     setLastOrder(null);
   }, []);
 
+  const resetDemoData = useCallback(() => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(CART_STORAGE_KEY);
+      localStorage.removeItem(HISTORY_STORAGE_KEY);
+      localStorage.removeItem(STOCK_STORAGE_KEY);
+    }
+    setCartItems([]);
+    setPaymentMethod(null);
+    setIsSubmitting(false);
+    setIsSubmitted(false);
+    setLastOrder(null);
+    setOrderHistory(SEED_HISTORY);
+    setStockMap(buildDefaultStockMap());
+  }, []);
+
   // ── Derived values ───────────────────────────────────────────────────────
 
   const subtotal = useMemo(
@@ -295,6 +312,7 @@ export function useCart(): UseCartReturn {
     setPaymentMethod,
     submitOrder,
     resetOrder,
+    resetDemoData,
     subtotal,
     tax,
     total,
