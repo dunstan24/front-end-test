@@ -71,22 +71,26 @@ export interface UseCartReturn {
 }
 
 export function useCart(): UseCartReturn {
-  // Initialise from localStorage on first render (SSR-safe)
-  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") return [];
-    return safeJsonParse<CartItem[]>(
-      localStorage.getItem(CART_STORAGE_KEY),
-      []
-    );
-  });
-
+  // Always start with [] so server and client render the same HTML (prevents hydration mismatch).
+  // localStorage is loaded AFTER hydration in a separate useEffect.
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Persist cart to localStorage whenever it changes
+  // Load persisted cart from localStorage after hydration (client-only)
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const stored = safeJsonParse<CartItem[]>(
+      localStorage.getItem(CART_STORAGE_KEY),
+      []
+    );
+    if (stored.length > 0) {
+      setCartItems(stored);
+    }
+  }, []); // runs once after first paint
+
+  // Persist cart to localStorage on every change
+  useEffect(() => {
     if (cartItems.length > 0) {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
     } else {
