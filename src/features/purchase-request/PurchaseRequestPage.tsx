@@ -20,6 +20,7 @@ import ProductCatalog from "./components/ProductCatalog";
 import CartPanel from "./components/CartPanel";
 import OrderSummary from "./components/OrderSummary";
 import PaymentMethod from "./components/PaymentMethod";
+import PaymentModal from "./components/PaymentModal";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import Toast from "@/components/ui/Toast";
@@ -60,6 +61,7 @@ export default function PurchaseRequestPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [orderNotes,  setOrderNotes]  = useState("");
   const [toast,       setToast]       = useState({ visible: false, message: "" });
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   /** After a successful submit: auto-open history and scroll to it */
   useEffect(() => {
@@ -97,9 +99,16 @@ export default function PurchaseRequestPage() {
     catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const handleSubmit = async () => {
+  const handleOpenPaymentModal = () => {
+    if (cart.canSubmit) {
+      setIsPaymentModalOpen(true);
+    }
+  };
+
+  const handleConfirmOrder = async () => {
     await cart.submitOrder();
     setOrderNotes("");
+    setIsPaymentModalOpen(false);
   };
 
   return (
@@ -217,12 +226,12 @@ export default function PurchaseRequestPage() {
                         fullWidth
                         loading={cart.isSubmitting}
                         disabled={!cart.canSubmit}
-                        onClick={handleSubmit}
+                        onClick={handleOpenPaymentModal}
                         id="submit-order-btn"
                       >
                         {cart.isSubmitting
                           ? "Submitting Order..."
-                          : `Submit Purchase Request — ${formatPrice(cart.total)}`}
+                          : `Proceed to Payment — ${formatPrice(cart.total)}`}
                       </Button>
 
                       {!cart.paymentMethod && cart.itemCount > 0 && (
@@ -415,6 +424,19 @@ export default function PurchaseRequestPage() {
         visible={toast.visible}
         onHide={hideToast}
       />
+
+      {/* Realistic Payment Simulation Modal */}
+      {cart.paymentMethod && (
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          paymentMethod={cart.paymentMethod}
+          totalAmount={cart.total}
+          totalItems={cart.totalQuantity}
+          onClose={() => setIsPaymentModalOpen(false)}
+          onConfirm={handleConfirmOrder}
+          onCopyToast={(msg) => setToast({ visible: true, message: msg })}
+        />
+      )}
     </div>
   );
 }
